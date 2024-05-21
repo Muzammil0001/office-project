@@ -38,7 +38,7 @@ exports.deleteAnalytics = async (req, res) => {
         if (!analytics) {
             return res.status(404).send({ message: 'Analytics data not found' });
         }
-        res.status(200).send({ message: 'Analytics data deleted successfully' });
+        res.status(200).send({ message: 'Analytics data deleted successfully' ,analytics});
     } catch (error) {
         res.status(500).send({ message: 'Failed to delete analytics data', error: error.message });
     }

@@ -74,7 +74,7 @@ exports.deleteDiscussion = async (req, res) => {
         if (!discussion) {
             return res.status(404).send({ message: 'Discussion not found' });
         }
-        res.status(200).send({ message: 'Discussion deleted successfully' });
+        res.status(200).send({ message: 'Discussion deleted successfully',discussion });
     } catch (error) {
         res.status(500).send({ message: 'Failed to delete discussion', error: error.message });
     }
