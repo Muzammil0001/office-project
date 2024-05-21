@@ -15,7 +15,7 @@ const announcementSchema = new Schema({
   targetRole: {
     type: String,
     required: [true, 'Target role is required'],
-    enum: ['students', 'teachers'],
+    enum: ['student', 'teacher'],
     lowercase: true
   }
 }, { timestamps: true });

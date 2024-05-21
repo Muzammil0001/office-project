@@ -1,5 +1,5 @@
 const Quiz = require('../models/quizzes-model');
-
+const User = require("../models/user-model")
 
 
 // Create a new quiz=====================
@@ -62,7 +62,7 @@ exports.deleteQuiz = async (req, res) => {
         if (!quiz) {
             return res.status(404).send({ message: 'Quiz not found' });
         }
-        res.status(200).send({message: 'Quiz deleted successfully', quiz:quiz});
+        res.status(200).send({message: 'Quiz deleted successfully', quiz});
     } catch (error) {
         res.status(500).send({ message: 'Failed to delete quiz', error: error.message });
     }

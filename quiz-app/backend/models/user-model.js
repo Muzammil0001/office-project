@@ -1,15 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const validator=require("validator");
 const hashPassword = require('../utils/password-hashing');
 const validateEmail = require('../utils/email-validator');
+
 
 const userSchema = new Schema({
   username: {
     type: String,
     required: true
   },
-  role: String,
+  role: {
+    type:String,
+    required: [true, 'User role is required'],
+    enum: ['student', 'teacher','admin'],
+  },
   email: {
     type:String,
     unique:true,
@@ -19,7 +23,19 @@ const userSchema = new Schema({
       }
     }
   },
-  password: String
+  password: {
+    type:String,
+    required:[true,"Registration Password Required"]
+  },
+  userAvatar: {
+    type: String,
+    validate: {
+      validator: function(v) {
+        return /\.(jpg|jpeg|png|gif)$/i.test(v);
+      },
+      message: props => `${props.value} is not a valid image file!`
+    }
+  }
 }, { timestamps: true });
 
 
