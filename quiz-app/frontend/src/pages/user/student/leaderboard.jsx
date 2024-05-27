@@ -1,7 +1,7 @@
 import { FaCrown } from "react-icons/fa";
 import { IoTrophySharp } from "react-icons/io5";
 import { FaAward } from "react-icons/fa6";
-import StudentList from "./studentList";
+import StudentList from "./components/student-list";
 
 const LeaderBoard = () => {
   return (

@@ -10,14 +10,14 @@ import {
 import { PiTrophyFill } from "react-icons/pi";
 import { IoBook, IoDocumentText, IoChatboxEllipses } from "react-icons/io5";
 import { ImBooks } from "react-icons/im";
-import Dashboard from "./components/dashboard";
-import Quizzes from "./components/quizzes";
-import StudyMaterial from "./components/study-material";
-import LeaderBoard from "./components/leaderboard";
-import Chat from "./components/chat";
-import Courses from "./components/courses";
-import Notify from "./components/notification";
-import StudentProfileSetting from "./components/setting";
+import Dashboard from "./dashboard";
+import Quizzes from "./quizzes";
+import StudyMaterial from "./study-material";
+import LeaderBoard from "./leaderboard";
+import Chat from "./chat";
+import Courses from "./courses";
+import Notify from "./notification";
+import StudentProfileSetting from "./setting";
 
 const StudentDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);

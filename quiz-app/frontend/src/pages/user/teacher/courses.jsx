@@ -1,4 +1,4 @@
-import { courseImage5 } from "../../../../config/constants/images";
+import { courseImage5 } from "../../../config/constants/images";
 
 const Courses = () => {
   return (
