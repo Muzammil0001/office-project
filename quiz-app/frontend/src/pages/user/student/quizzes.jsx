@@ -1,4 +1,4 @@
-import QuizReport from "./quiz-report";
+import QuizReport from "./components/quiz-report";
 
 const Quizzes = () => {
   return (

@@ -22,10 +22,10 @@ const Dashboard = () => {
       <div className="w-full  p-2 ">
         <div className="flex justify-center gap-5 items-center flex-wrap mb-5 px-4">
           {[
-            { id: 1, title: "Students",count:70 },
-            { id: 2, title: "Courses",count:12 },
-            { id: 3, title: "Teachers",count:20 },
-            { id: 4, title: "Notifications",count:10 },
+            { id: 1, title: "Students", count: 70 },
+            { id: 2, title: "Courses", count: 12 },
+            { id: 3, title: "Teachers", count: 20 },
+            { id: 4, title: "Notifications", count: 10 },
           ].map((item) => {
             return (
               <>

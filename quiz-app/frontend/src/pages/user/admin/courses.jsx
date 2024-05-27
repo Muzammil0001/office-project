@@ -1,20 +1,49 @@
 import { FaRegEdit, FaEye } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiOutlineStop } from "react-icons/ai";
+import CreateCourse from "./components/create-course";
+import UpdateCourse from "./components/update-course";
+import DeleteCourse from "./components/delete-course";
+import ViewCourseDetails from "./components/view-course";
+import { useState } from "react";
 
-const QuizzesList = () => {
-  
+const CoursesList = () => {
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+  const [isViewModalOpen, setViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+
   return (
     <>
       <div className="h-full min-h-[100vh] w-full">
+        <CreateCourse
+          isOpenModal={isCreateModalOpen}
+          setToClose={setCreateModalOpen}
+        />
+        <UpdateCourse
+          isOpenModal={isUpdateModalOpen}
+          setToClose={setUpdateModalOpen}
+        />
+        <DeleteCourse
+          isOpenModal={isDeleteModalOpen}
+          setToClose={setDeleteModalOpen}
+        />
+        <ViewCourseDetails
+          isOpenModal={isViewModalOpen}
+          setToClose={setViewModalOpen}
+        />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
-          <button className="py-2 px-4 bg-blue-800 rounded-sm text-white">
-            Add Quiz
+          <button
+            onClick={() => {
+              setCreateModalOpen(true);
+            }}
+            className="py-2 px-4 bg-blue-800 rounded-sm text-white"
+          >
+            Add Course
           </button>
         </div>
         <div className="flex flex-col items-center px-4 py-10">
           <h2 className="text-center text-3xl font-bold font-nunito mb-10">
-            Quizzez
+            Courses
           </h2>
           <div className="w-full overflow-auto">
             <table className="min-w-[500px] w-full">
@@ -31,9 +60,6 @@ const QuizzesList = () => {
                     Instructor
                   </th>
                   <th className="p-2  font-medium border border-gray-400">
-                    Date
-                  </th>
-                  <th className="p-2  font-medium border border-gray-400">
                     Action
                   </th>
                 </tr>
@@ -42,43 +68,58 @@ const QuizzesList = () => {
                 {[
                   {
                     id: 1,
-                    quizname: "Math",
+                    name: "Math",
                     classes: "12th",
                     instructor: "Sufyan",
                     date: "22/02/2024",
                   },
                   {
                     id: 2,
-                    quizname: "Computer",
+                    name: "Computer",
                     classes: "12th",
                     instructor: "Ahmad",
                     date: "22/02/2024",
                   },
                   {
                     id: 3,
-                    quizname: "English",
+                    name: "English",
                     classes: "12th",
                     instructor: "Ali",
                     date: "22/02/2024",
                   },
                 ].map((student) => {
-                  const { id, quizname, classes, instructor, date } = student;
+                  const { id, name, classes, instructor } = student;
                   return (
                     <tr key={id} className="text-center hover:bg-gray-100 h-12">
                       <td className="p-2 border border-gray-300">{id}</td>
-                      <td className="p-2 border border-gray-300">{quizname}</td>
+                      <td className="p-2 border border-gray-300">{name}</td>
                       <td className="p-2 border border-gray-300">{classes}</td>
 
                       <td className="p-2 border border-gray-300">
                         {instructor}
                       </td>
-                      <td className="p-2 border border-gray-300">{date}</td>
                       <td className="p-2 border border-gray-300 ">
                         <div className="flex gap-5 p-2 justify-center">
-                          <FaEye className="size-5 cursor-pointer text-blue-500" />
-                          <AiOutlineStop className="size-5 cursor-pointer text-red-500" />
-                          <FaRegEdit className="size-5 cursor-pointer text-green-800" />
-                          <RiDeleteBin6Line className="size-5 cursor-pointer  text-red-500" />
+                          <div className="flex gap-5 p-2 justify-center">
+                            <FaEye
+                              onClick={() => {
+                                setViewModalOpen(true);
+                              }}
+                              className="size-5 cursor-pointer text-blue-500"
+                            />
+                            <FaRegEdit
+                              onClick={() => {
+                                setUpdateModalOpen(true);
+                              }}
+                              className="size-5 cursor-pointer text-green-800"
+                            />
+                            <RiDeleteBin6Line
+                              onClick={() => {
+                                setDeleteModalOpen(true);
+                              }}
+                              className="size-5 cursor-pointer  text-red-500"
+                            />
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -93,4 +134,4 @@ const QuizzesList = () => {
   );
 };
 
-export default QuizzesList;
+export default CoursesList;

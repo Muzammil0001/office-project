@@ -6,11 +6,9 @@ const Chat = () => {
 
   const chatEndRef = useRef(null);
 
-
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatHistory]);
-
 
   const sendMessage = () => {
     if (message.trim()) {
@@ -23,7 +21,6 @@ const Chat = () => {
       setMessage("");
     }
   };
-
 
   const handleChange = (event) => {
     setMessage(event.target.value);

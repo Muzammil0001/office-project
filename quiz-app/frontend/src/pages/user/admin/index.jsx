@@ -10,15 +10,15 @@ import {
 import { IoBook, IoDocumentText } from "react-icons/io5";
 import { FaUser, FaUserGraduate } from "react-icons/fa";
 import { SiGoogleclassroom } from "react-icons/si";
-import TeachersList from "./components/teachers";
-import Dashboard from "./components/dashboard";
-import Quizzes from "./components/quizzes";
-import ClassesList from "./components/classes";
-import Announcement from "./components/announcements";
-import Courses from "./components/courses";
-import Notify from "./components/notification";
-import StudentProfileSetting from "./components/setting";
-import StudentsList from "./components/students";
+import TeachersList from "./teachers";
+import Dashboard from "./dashboard";
+import Quizzes from "./quizzes";
+import ClassesList from "./classes";
+import Announcement from "./announcement";
+import Courses from "./courses";
+import Notify from "./notification";
+import StudentProfileSetting from "./setting";
+import StudentsList from "./students";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);

@@ -1,15 +1,10 @@
-import { courseImage5 } from "../../../../config/constants/images";
+import { courseImage5 } from "../../../config/constants/images";
 
 const StudyMaterial = () => {
   return (
     <>
-      <div className="w-full">
-        <div className="w-full flex md:flex-row flex-col items-center justify-end px-4 my-4">
-          <button className="py-2 px-4 bg-blue-800 rounded-sm text-white">
-            Add Material
-          </button>
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-5 mt-10">
+      <div>
+        <div className="flex flex-wrap items-center justify-center gap-5">
           {[
             { id: 1, title: "Book Material" },
             { id: 2, title: "Video Lectures" },

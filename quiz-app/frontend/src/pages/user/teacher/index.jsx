@@ -10,14 +10,14 @@ import {
 import { IoBook, IoDocumentText, IoChatboxEllipses } from "react-icons/io5";
 import { ImBooks } from "react-icons/im";
 import { BsGraphUpArrow } from "react-icons/bs";
-import LeaderBoard from "./components/student-perfromance";
-import Dashboard from "./components/dashboard";
-import Quizzes from "./components/quizzes";
-import StudyMaterial from "./components/study-material";
-import Chat from "./components/chat";
-import Courses from "./components/courses";
-import Notify from "./components/notification";
-import StudentProfileSetting from "./components/setting";
+import LeaderBoard from "./student-perfromance";
+import Dashboard from "./dashboard";
+import Quizzes from "./quizzes";
+import StudyMaterial from "./study-material";
+import Chat from "./chat";
+import Courses from "./courses";
+import Notify from "./notification";
+import StudentProfileSetting from "./setting";
 
 const TeacherDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
