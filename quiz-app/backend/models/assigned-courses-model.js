@@ -1,18 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const discussionSchema = new Schema(
+const assignedCoursesSchema = new Schema(
   {
-    message: {
-      type: String,
-      required: true,
-    },
-    senderId: {
+    courseId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Course",
       required: true,
     },
-    receiverId: {
+    teacherId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -21,5 +17,5 @@ const discussionSchema = new Schema(
   { timestamps: true }
 );
 
-const Discussion = mongoose.model("Discussion", discussionSchema);
-module.exports = Discussion;
+const AssignedCourse = mongoose.model("AssignedCourse", assignedCoursesSchema);
+module.exports = AssignedCourse;

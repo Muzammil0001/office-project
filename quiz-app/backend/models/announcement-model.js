@@ -1,24 +1,27 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const announcementSchema = new Schema({
-  content: {
-    type: String,
-    required: [true, 'Announcement content is required'],
-    trim: true
+const announcementSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: [true, "Announcement title is required"],
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: [true, "Announcement description is required"],
+      trim: true,
+    },
+    targetRole: {
+      type: String,
+      required: [true, "Target role is required"],
+      enum: ["student", "teacher"],
+      lowercase: true,
+    },
   },
-  postedBy: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'PostedBy user reference is required']
-  },
-  targetRole: {
-    type: String,
-    required: [true, 'Target role is required'],
-    enum: ['student', 'teacher'],
-    lowercase: true
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-const Announcement = mongoose.model('Announcement', announcementSchema);
+const Announcement = mongoose.model("Announcement", announcementSchema);
 module.exports = Announcement;
