@@ -27,30 +27,59 @@ exports.getCourseById = async (req, res) => {
 // Create a new course
 exports.createCourse = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).send({ message: "Course image is required" });
+    }
+
     const course = new Course({
       courseName: req.body.courseName,
-      batch: req.body.batch,
-      image: req.body.image,
+      description: req.body.description,
+      courseImage: req.file.path,
     });
 
     const newCourse = await course.save();
     res.status(201).send(newCourse);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    console.error("Error creating course:", err);
+    res
+      .status(500)
+      .send({ message: "Internal Server Error", error: err.message });
   }
 };
 
 // Update a course
 exports.updateCourse = async (req, res) => {
   try {
+    const updateData = {
+      courseName: req.body.courseName,
+      description: req.body.description,
+    };
+
+    if (req.file) {
+      updateData.courseImage = req.file.path;
+    }
+
     const updatedCourse = await Course.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true }
     );
     res.status(200).send(updatedCourse);
   } catch (err) {
     res.status(400).send({ message: err.message });
+  }
+};
+
+// Get a single course by Roles<=====================>
+exports.getCourseCount = async (req, res) => {
+  try {
+    const count = await Course.countDocuments();
+    res.status(200).send({ courseCount: count });
+  } catch (error) {
+    console.error("Error getting users by role:", error);
+    res
+      .status(500)
+      .send({ message: "Internal Server Error", error: error.toString() });
   }
 };
 

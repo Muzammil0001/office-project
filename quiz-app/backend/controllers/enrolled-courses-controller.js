@@ -2,14 +2,8 @@ const EnrolledCourse = require("../models/enrolled-courses-js");
 
 // Create an enrollment
 exports.createEnrollment = async (req, res) => {
-  const { studentId, courseId, courseStatus } = req.body;
-
   try {
-    const newEnrollment = new EnrolledCourse({
-      studentId,
-      courseId,
-      courseStatus,
-    });
+    const newEnrollment = new EnrolledCourse(req.body);
     await newEnrollment.save();
     res.status(201).send({
       message: "Enrollment created successfully",
@@ -32,6 +26,41 @@ exports.getAllEnrollments = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message: "Failed to retrieve enrollments",
+      error: error.message,
+    });
+  }
+};
+
+// Get all students enrolled in special course
+exports.getStudentsByCourseId = async (req, res) => {
+  try {
+    const { courseId } = req.query;
+
+    if (!courseId) {
+      return res
+        .status(400)
+        .send({ message: "CourseId parameter is required." });
+    }
+    const enrollments = await EnrolledCourse.find({
+      courseId: courseId,
+    }).populate({
+      path: "studentId",
+      select: "username _id",
+    });
+
+    if (enrollments.length === 0) {
+      return res.status(404).send({
+        message: "No students found enrolled in the specified course.",
+      });
+    }
+
+    const students = enrollments.map((enrollment) => enrollment.studentId);
+
+    res.status(200).send(students);
+  } catch (error) {
+    console.error("Error retrieving students by courseId:", error);
+    res.status(500).send({
+      message: "Failed to retrieve students",
       error: error.message,
     });
   }

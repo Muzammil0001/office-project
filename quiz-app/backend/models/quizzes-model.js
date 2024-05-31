@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+const Course = require("./course-model");
 const Schema = mongoose.Schema;
+const User = require("./user-model");
 
 const quizSchema = new Schema(
   {
-    title: { type: String, required: true },
+    quizTitle: { type: String, required: true },
     description: { type: String },
     questions: [
       {
@@ -29,11 +31,17 @@ const quizSchema = new Schema(
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
-    studentId: {
+    studentId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
+    courseName: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: Course,
       required: true,
     },
     isActive: { type: Boolean, default: true },

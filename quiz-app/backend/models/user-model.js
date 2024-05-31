@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Course = require("./course-model");
+
 const hashPassword = require("../utils/password-hashing");
 const validateEmail = require("../utils/email-validator");
 
@@ -7,8 +9,7 @@ const userSchema = new Schema(
   {
     courseId: {
       type: Schema.Types.ObjectId,
-      ref: "Courses",
-      required: true,
+      ref: "Course",
     },
     username: {
       type: String,
@@ -16,11 +17,9 @@ const userSchema = new Schema(
     },
     phone: {
       type: Number,
-      required: true,
     },
     address: {
       type: String,
-      required: true,
     },
     role: {
       type: String,

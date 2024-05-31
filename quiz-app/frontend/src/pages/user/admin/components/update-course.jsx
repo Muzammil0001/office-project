@@ -6,10 +6,55 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import {
+  updateCourseApi,
+  getCourseByIdApi,
+} from "../../../../apis/course-apis";
 
-const UpdateCourse = ({ isOpenModal, setToClose }) => {
+const UpdateCourse = ({ isOpenModal, setToClose, courseId }) => {
+  const [formData, setFormData] = useState({
+    courseName: "",
+    description: "",
+    courseImage: null,
+  });
+
+  const handleChange = (event) => {
+    const { name, value, files } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: files ? files[0] : value,
+    }));
+  };
+
+  const onSubmitHandle = async (event) => {
+    event.preventDefault();
+    const data = new FormData();
+    for (const key in formData) {
+      data.append(key, formData[key]);
+    }
+    await updateCourseApi(courseId, data);
+    setToClose(false);
+    alert("Course Updated Successfully");
+  };
+
+  useEffect(() => {
+    if (!isOpenModal) return;
+    const GetApiFunc = async () => {
+      try {
+        const fetchCourse = await getCourseByIdApi(courseId);
+        setFormData(fetchCourse);
+        console.log("fetchCourse:", fetchCourse);
+      } catch (error) {
+        console.error("Failed to fetch course details:", error);
+      }
+    };
+    if (courseId) {
+      GetApiFunc();
+    }
+  }, [courseId, isOpenModal]);
+
   return (
     <Transition appear show={isOpenModal} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => {}} __demoMode>
@@ -31,7 +76,7 @@ const UpdateCourse = ({ isOpenModal, setToClose }) => {
                   className="flex justify-between items-center "
                 >
                   <span className="text-lg text-center font-medium leading-6 text-gray-900">
-                    Update Course
+                    Update Student
                   </span>
                   <button
                     type="button"
@@ -41,69 +86,49 @@ const UpdateCourse = ({ isOpenModal, setToClose }) => {
                     <RxCross2 className="size-5" />
                   </button>
                 </DialogTitle>
-                <form className="mt-2">
+                <form className="mt-2" onSubmit={onSubmitHandle}>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
                       Course Name
                     </label>
                     <input
                       type="text"
-                      name="CourseName"
+                      name="courseName"
                       className="dialog_input"
-                      placeholder="Enter Course name"
+                      placeholder="Enter course name"
+                      required
+                      value={formData?.courseName}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
-                      Duration (minutes)
+                      Description
                     </label>
                     <input
-                      type="number"
-                      name="duration"
+                      name="description"
                       className="dialog_input"
-                      placeholder="Duration in minutes"
+                      required
+                      value={formData?.description}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
-                      Class
+                      Course Image
                     </label>
                     <input
-                      type="text"
-                      name="class"
+                      type="file"
+                      name="courseImage"
                       className="dialog_input"
-                      placeholder="Class"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Due Date
-                    </label>
-                    <input
-                      type="date"
-                      name="dueDate"
-                      className="dialog_input"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Batch Number
-                    </label>
-                    <input
-                      type="text"
-                      name="batchNumber"
-                      className="dialog_input"
-                      placeholder="Batch number"
+                      onChange={handleChange}
+                      accept="image/*"
                     />
                   </div>
                   <div className="mt-6 flex items-center justify-end">
                     <Button
-                      className="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       type="submit"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setToClose(false);
-                      }}
                     >
                       Update
                     </Button>

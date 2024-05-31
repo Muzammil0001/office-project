@@ -7,13 +7,12 @@ const coursesSchema = new Schema(
       type: String,
       required: true,
     },
-    batch: {
+    description: {
       type: String,
       required: true,
     },
-    image: {
+    courseImage: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

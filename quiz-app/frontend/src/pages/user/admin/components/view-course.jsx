@@ -6,10 +6,34 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { getCourseByIdApi } from "../../../../apis/course-apis";
 
-const ViewCourseDetails = ({ isOpenModal, setToClose }) => {
+const ViewCourseDetails = ({ isOpenModal, setToClose, courseId }) => {
+  const [course, setCourse] = useState({
+    courseName: "",
+    description: "",
+    createdAt: "",
+  });
+
+  useEffect(() => {
+    if (!isOpenModal) return;
+
+    const GetCourseFunc = async () => {
+      try {
+        const fetchCourse = await getCourseByIdApi(courseId);
+        setCourse(fetchCourse);
+        console.log("fetchCourseById:", fetchCourse);
+      } catch (error) {
+        console.error("Error fetching course:", error);
+      }
+    };
+    if (courseId) {
+      GetCourseFunc();
+    }
+  }, [courseId,isOpenModal]);
+
   return (
     <Transition appear show={isOpenModal} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => {}} __demoMode>
@@ -31,7 +55,7 @@ const ViewCourseDetails = ({ isOpenModal, setToClose }) => {
                   className="flex justify-between items-center mb-2 "
                 >
                   <span className="text-xl font-medium leading-6 text-gray-900">
-                    Course
+                    View Course
                   </span>
                   <button
                     type="button"
@@ -44,26 +68,15 @@ const ViewCourseDetails = ({ isOpenModal, setToClose }) => {
                 <div className=" flex flex-col gap-2">
                   <div className="">
                     <div className=" font-medium text-base">Course Name:</div>
-                    <div className="text-sm">Lorem ipsum dolor sit amet.</div>
+                    <div className="text-sm">{course?.courseName}</div>
                   </div>
                   <div className="">
-                    <div className=" font-medium">Batch:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
+                    <div className=" font-medium">Details</div>
+                    <div className="text-sm">{course?.description}</div>
                   </div>
                   <div className="">
-                    <div className=" font-medium">Duration:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
-                  </div>
-                  <div className="">
-                    <div className=" font-medium">Due Date:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
-                  </div>
-                  <div className="">
-                    <div className=" font-medium">Created at:</div>
-                    <div className="text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Magni, corporis?
-                    </div>
+                    <div className=" font-medium">createdAt:</div>
+                    <div className="text-sm">{course?.createdAt}</div>
                   </div>
                 </div>
               </DialogPanel>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { courseImage5 } from "../../../config/constants/images";
 import {
   MdDashboard,
@@ -9,7 +9,6 @@ import {
 } from "react-icons/md";
 import { IoBook, IoDocumentText } from "react-icons/io5";
 import { FaUser, FaUserGraduate } from "react-icons/fa";
-import { SiGoogleclassroom } from "react-icons/si";
 import TeachersList from "./teachers";
 import Dashboard from "./dashboard";
 import Quizzes from "./quizzes";
@@ -22,15 +21,32 @@ import StudentsList from "./students";
 
 const AdminDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [activeComponent, setActiveComponent] = useState("dashboard");
+  const [activeComponent, setActiveComponent] = useState(
+    localStorage.getItem("activeComponent") || "dashboard"
+  );
 
   const onClickMenuHandle = (componentName) => {
     setActiveComponent(componentName);
+    localStorage.setItem("activeComponent", componentName);
   };
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setActiveComponent(
+        localStorage.getItem("activeComponent") || "dashboard"
+      );
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   const menuItems = [
     {
@@ -58,12 +74,6 @@ const AdminDashboard = () => {
       label: "Quizzes",
       component: "quiz",
     },
-    {
-      icon: <SiGoogleclassroom className="size-5" />,
-      label: "Classes",
-      component: "classes",
-    },
-
     {
       icon: <MdAnnouncement className="size-5" />,
       label: "Announcement",

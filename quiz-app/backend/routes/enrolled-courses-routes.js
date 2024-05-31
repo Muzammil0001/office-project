@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const enrolledCourseController = require("../controllers/enrolled-courses-controller");
-router.post("enrolledcourse/", enrolledCourseController.createEnrollment);
-router.get("/enrolledcourse/", enrolledCourseController.getAllEnrollments);
-router.get("/enrolledcourse/:id", enrolledCourseController.getEnrollmentById);
-router.patch("/enrolledcourse/:id", enrolledCourseController.updateEnrollment);
-router.delete("/enrolledcourse/:id", enrolledCourseController.deleteEnrollment);
+
+router.post("/enrollments/", enrolledCourseController.createEnrollment);
+router.get("/enrollments/", enrolledCourseController.getAllEnrollments);
+router.get(
+  "/enrollments/students/",
+  enrolledCourseController.getStudentsByCourseId
+);
+router.get("/enrollments/:id", enrolledCourseController.getEnrollmentById);
+router.patch("/enrollments/:id", enrolledCourseController.updateEnrollment);
+router.delete("/enrollments/:id", enrolledCourseController.deleteEnrollment);
 
 module.exports = router;

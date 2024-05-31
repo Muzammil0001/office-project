@@ -6,6 +6,7 @@ import { useState } from "react";
 import UpdateQuiz from "./components/update-quiz";
 import DeleteQuiz from "./components/delete-quiz";
 import ViewQuizDetails from "./components/view-quiz";
+import { Link } from "react-router-dom";
 
 const QuizzesList = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -33,14 +34,16 @@ const QuizzesList = () => {
           setToClose={setViewModalOpen}
         />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
-          <button
-            onClick={() => {
-              setCreateModalOpen(true);
-            }}
-            className="py-2 px-4 bg-blue-800 rounded-sm text-white"
-          >
-            Add Quiz
-          </button>
+          <Link to={"/quiz"}>
+            <button
+              onClick={() => {
+                setCreateModalOpen(true);
+              }}
+              className="py-2 px-4 bg-blue-800 rounded-sm text-white"
+            >
+              Create Quiz
+            </button>
+          </Link>
         </div>
         <div className="flex flex-col items-center px-4 py-10">
           <h2 className="text-center text-3xl font-bold font-nunito mb-10">

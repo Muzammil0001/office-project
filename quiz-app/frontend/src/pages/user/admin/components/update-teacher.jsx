@@ -6,10 +6,56 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { RxCross2 } from "react-icons/rx";
+import { getUserByIdApi, updateUserApi } from "../../../../apis/user-api";
+import { getCoursesApi } from "../../../../apis/course-apis";
 
-const UpdateTeacher = ({ isOpenModal, setToClose }) => {
+const UpdateStudent = ({ isOpenModal, setToClose, teacherId }) => {
+  const [courses, setCourses] = useState([{ _id: "", courseName: "" }]);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await updateUserApi(teacherId, data);
+      if (response.status == 200) {
+        alert("Student updated successfully.");
+        setToClose(false);
+      } else {
+        console.log("Failed to update student.");
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+      alert("Failed to update student.");
+    }
+  };
+
+  useEffect(() => {
+    if (!isOpenModal || !teacherId) return;
+
+    const fetchStudent = async () => {
+      try {
+        const fetchedCourse = await getCoursesApi();
+        setCourses(fetchedCourse);
+        const studentData = await getUserByIdApi(teacherId);
+        console.log("studentData:", studentData);
+        setValue("username", studentData.username);
+        setValue("email", studentData.email);
+      } catch (error) {
+        console.log("Failed to fetch student details:", error);
+      }
+    };
+
+    fetchStudent();
+  }, [teacherId, isOpenModal, setValue]);
+
   return (
     <Transition appear show={isOpenModal} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => {}} __demoMode>
@@ -41,72 +87,90 @@ const UpdateTeacher = ({ isOpenModal, setToClose }) => {
                     <RxCross2 className="size-5" />
                   </button>
                 </DialogTitle>
-                <form className="mt-2">
+                <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
                       Teacher Name
                     </label>
                     <input
                       type="text"
-                      name="teachername"
+                      {...register("username", {
+                        required: "Username is required",
+                        pattern: {
+                          value: /^[A-Za-z ]*$/,
+                          message:
+                            "Username can only contain letters and spaces.",
+                        },
+                        minLength: {
+                          value: 3,
+                          message: "Username must have at least 3 characters",
+                        },
+                        maxLength: {
+                          value: 30,
+                          message: "Username cannot exceed 30 characters",
+                        },
+                      })}
                       className="dialog_input"
-                      placeholder="Enter teacher name"
+                      placeholder="Enter student name"
                     />
+                    <p className=" text-red-500 text-sm">
+                      {errors.username?.message}
+                    </p>
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
-                      Phone
+                      Email
                     </label>
                     <input
-                      type="number"
-                      name="phone"
+                      type="email"
+                      {...register("email", {
+                        required: "Email is required",
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: "Invalid email address",
+                        },
+                      })}
                       className="dialog_input"
-                      placeholder="phone"
+                      placeholder="Enter email"
                     />
+                    <p className=" text-red-500 text-sm">
+                      {errors.email?.message}
+                    </p>
                   </div>
+
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
-                      Address
+                      Select Class
                     </label>
-                    <input
-                      type="text"
-                      name="address"
+                    <select
+                      name="Class No."
                       className="dialog_input"
-                      placeholder="Address"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Course ID
-                    </label>
-                    <select name="course" className="dialog_input">
-                      <option value="">Select a course</option>
-                      <option value="math">MATH234</option>
-                      <option value="science">SC932</option>
-                      <option value="history">H4321 </option>
+                      required
+                      {...register("courseId", {
+                        required: "courseId is required",
+                      })}
+                    >
+                      <option value="">Select class</option>
+                      {courses?.map((course, index) => {
+                        return (
+                          <>
+                            <option key={index} value={course._id}>
+                              {course.courseName}
+                            </option>
+                          </>
+                        );
+                      })}
+                      <p className=" text-red-500 text-sm">
+                        {errors.courseId?.message}
+                      </p>
                     </select>
-                  </div>
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Batch Number
-                    </label>
-                    <input
-                      type="text"
-                      name="batchNumber"
-                      className="dialog_input"
-                      placeholder="Batch number"
-                    />
                   </div>
                   <div className="mt-6 flex items-center justify-end">
                     <Button
-                      className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                       type="submit"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setToClose(false);
-                      }}
                     >
-                      Create
+                      Update
                     </Button>
                   </div>
                 </form>
@@ -118,4 +182,4 @@ const UpdateTeacher = ({ isOpenModal, setToClose }) => {
     </Transition>
   );
 };
-export default UpdateTeacher;
+export default UpdateStudent;

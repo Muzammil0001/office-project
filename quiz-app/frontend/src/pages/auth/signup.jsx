@@ -15,7 +15,6 @@ const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm({
     resolver: yupResolver(signupSchema),
     mode: "onChange",
