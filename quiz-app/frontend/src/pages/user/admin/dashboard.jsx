@@ -1,7 +1,12 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { countUserByIRole } from "../../../apis/user-api";
+import { useEffect, useState } from "react";
+import { countCourse } from "../../../apis/course-apis";
 
 const Dashboard = () => {
+  const [dataCount, setDataCount] = useState([]);
+
   const options = {
     chart: {
       type: "line",
@@ -17,14 +22,29 @@ const Dashboard = () => {
     ],
   };
 
+  useEffect(() => {
+    const countUsersFunc = async () => {
+      const fetchedTeacherCounts = await countUserByIRole("teacher");
+      const fetchedStudentCounts = await countUserByIRole("student");
+      const fetchedCourseCounts = await countCourse();
+      console.log("fetchedCourseCounts:", fetchedCourseCounts);
+      setDataCount([
+        fetchedTeacherCounts,
+        fetchedStudentCounts,
+        fetchedCourseCounts,
+      ]);
+    };
+    countUsersFunc();
+  }, [dataCount]);
+  console.log("userCounts:", dataCount);
   return (
     <>
       <div className="w-full  p-2 ">
         <div className="flex justify-center gap-5 items-center flex-wrap mb-5 px-4">
           {[
-            { id: 1, title: "Students", count: 70 },
-            { id: 2, title: "Courses", count: 12 },
-            { id: 3, title: "Teachers", count: 20 },
+            { id: 2, title: "Teachers", count: dataCount[0]?.teacherCount },
+            { id: 1, title: "Students", count: dataCount[1]?.studentCount },
+            { id: 3, title: "Courses", count: dataCount[2]?.courseCount },
             { id: 4, title: "Notifications", count: 10 },
           ].map((item) => {
             return (

@@ -4,14 +4,32 @@ import CreateCourse from "./components/create-course";
 import UpdateCourse from "./components/update-course";
 import DeleteCourse from "./components/delete-course";
 import ViewCourseDetails from "./components/view-course";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getCoursesApi } from "../../../apis/course-apis";
+import Loader from "../../../components/loader";
 
 const CoursesList = () => {
+  const [loader, setLoader] = useState(true);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [courseData, setCourseData] = useState([]);
 
+  const handleIconClick = (id, setModalOpen) => {
+    setSelectedCourseId(id);
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    const GetApiFunc = async () => {
+      const fetchCourses = await getCoursesApi();
+      setCourseData(fetchCourses);
+      fetchCourses ? setLoader(false) : setLoader(true);
+    };
+    GetApiFunc();
+  }, [courseData]);
   return (
     <>
       <div className="h-full min-h-[100vh] w-full">
@@ -22,21 +40,24 @@ const CoursesList = () => {
         <UpdateCourse
           isOpenModal={isUpdateModalOpen}
           setToClose={setUpdateModalOpen}
+          courseId={selectedCourseId}
         />
         <DeleteCourse
           isOpenModal={isDeleteModalOpen}
           setToClose={setDeleteModalOpen}
+          courseId={selectedCourseId}
         />
         <ViewCourseDetails
           isOpenModal={isViewModalOpen}
           setToClose={setViewModalOpen}
+          courseId={selectedCourseId}
         />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
           <button
             onClick={() => {
               setCreateModalOpen(true);
             }}
-            className="py-2 px-4 bg-blue-800 rounded-sm text-white"
+            className="py-2 px-4 bg-gradient-to-tr from-blue-950 to-blue-500 rounded-sm text-white"
           >
             Add Course
           </button>
@@ -51,13 +72,7 @@ const CoursesList = () => {
                 <tr className="text-center bg-blue-950 text-white h-12">
                   <th className="p-2  font-medium border border-gray-400">#</th>
                   <th className="p-2  font-medium border border-gray-400">
-                    Name
-                  </th>
-                  <th className="p-2  font-medium border border-gray-400">
-                    Class
-                  </th>
-                  <th className="p-2  font-medium border border-gray-400">
-                    Instructor
+                    Course Name
                   </th>
                   <th className="p-2  font-medium border border-gray-400">
                     Action
@@ -65,58 +80,35 @@ const CoursesList = () => {
                 </tr>
               </thead>
               <tbody>
-                {[
-                  {
-                    id: 1,
-                    name: "Math",
-                    classes: "12th",
-                    instructor: "Sufyan",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 2,
-                    name: "Computer",
-                    classes: "12th",
-                    instructor: "Ahmad",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 3,
-                    name: "English",
-                    classes: "12th",
-                    instructor: "Ali",
-                    date: "22/02/2024",
-                  },
-                ].map((student) => {
-                  const { id, name, classes, instructor } = student;
+                {courseData?.map((course, index) => {
+                  const { _id, courseName } = course;
                   return (
-                    <tr key={id} className="text-center hover:bg-gray-100 h-12">
-                      <td className="p-2 border border-gray-300">{id}</td>
-                      <td className="p-2 border border-gray-300">{name}</td>
-                      <td className="p-2 border border-gray-300">{classes}</td>
+                    <tr
+                      key={index}
+                      className="text-center hover:bg-gray-100 h-12"
+                    >
+                      <td className=" border border-gray-300">{index + 1}</td>
+                      <td className=" border border-gray-300">{courseName}</td>
 
-                      <td className="p-2 border border-gray-300">
-                        {instructor}
-                      </td>
-                      <td className="p-2 border border-gray-300 ">
-                        <div className="flex gap-5 p-2 justify-center">
-                          <div className="flex gap-5 p-2 justify-center">
+                      <td className=" border border-gray-300 ">
+                        <div className="flex gap-5  justify-center">
+                          <div className="flex gap-5  justify-center">
                             <FaEye
-                              onClick={() => {
-                                setViewModalOpen(true);
-                              }}
+                              onClick={() =>
+                                handleIconClick(_id, setViewModalOpen)
+                              }
                               className="size-5 cursor-pointer text-blue-500"
                             />
                             <FaRegEdit
-                              onClick={() => {
-                                setUpdateModalOpen(true);
-                              }}
+                              onClick={() =>
+                                handleIconClick(_id, setUpdateModalOpen)
+                              }
                               className="size-5 cursor-pointer text-green-800"
                             />
                             <RiDeleteBin6Line
-                              onClick={() => {
-                                setDeleteModalOpen(true);
-                              }}
+                              onClick={() =>
+                                handleIconClick(_id, setDeleteModalOpen)
+                              }
                               className="size-5 cursor-pointer  text-red-500"
                             />
                           </div>
@@ -127,6 +119,11 @@ const CoursesList = () => {
                 })}
               </tbody>
             </table>
+            {loader && (
+              <div className="flex justify-center">
+                <Loader />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Home from "./pages";
 import StudentDashbaord from "./pages/user/student";
 import TeacherDashboard from "./pages/user/teacher";
 import AdminDashboard from "./pages/user/admin";
+import QuizForm from "./components/quiz-form";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/quiz" element={<QuizForm />} />
           <Route path="/student" element={<StudentDashbaord />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />

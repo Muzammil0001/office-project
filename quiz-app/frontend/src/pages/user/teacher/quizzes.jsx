@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CreateQuiz from "./components/create-quiz";
+import { Link } from "react-router-dom";
 
 const Quizzes = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -11,14 +12,16 @@ const Quizzes = () => {
           setToClose={setCreateModalOpen}
         />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
-          <button
-            onClick={() => {
-              setCreateModalOpen(true);
-            }}
-            className="py-2 px-4 bg-blue-800 rounded-sm text-white"
-          >
-            Create Quiz
-          </button>
+          <Link to={"/quiz"}>
+            <button
+              onClick={() => {
+                setCreateModalOpen(true);
+              }}
+              className="py-2 px-4 bg-blue-800 rounded-sm text-white"
+            >
+              Create Quiz
+            </button>
+          </Link>
         </div>
 
         <div className="flex flex-col items-center px-4 py-10">

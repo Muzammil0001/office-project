@@ -4,8 +4,10 @@ const signupSchema = yup
   .object({
     username: yup
       .string()
+      .matches(/^[a-zA-Z ]*$/, "Invalid username")
       .required("Username is required*")
-      .min(3, "Username must be at least 4 characters long"),
+      .min(3, "Username must be at least 3 characters long")
+      .max(30, "Username cannot exceed 30 characters"),
     email: yup
       .string()
       .required("Email is required*")

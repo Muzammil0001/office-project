@@ -4,13 +4,34 @@ import CreateStudent from "./components/create-student";
 import UpdateStudent from "./components/update-student";
 import DeleteStudent from "./components/delete-student";
 import ViewStudentDetails from "./components/view-student";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUserByIRole } from "../../../apis/user-api";
+import Loader from "../../../components/loader";
 
 const StudentsList = () => {
+  const [loader, setLoader] = useState(true);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const [studentData, setStudentData] = useState([
+    { _id: "", username: "", email: "" },
+  ]);
+
+  const handleIconClick = (id, setModalOpen) => {
+    setSelectedStudentId(id);
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    const GetUsersFunc = async () => {
+      const fetchStudent = await getUserByIRole("student");
+      setStudentData(fetchStudent);
+      fetchStudent ? setLoader(false) : setLoader(true);
+    };
+    GetUsersFunc();
+  }, [studentData]);
 
   return (
     <>
@@ -22,21 +43,24 @@ const StudentsList = () => {
         <UpdateStudent
           isOpenModal={isUpdateModalOpen}
           setToClose={setUpdateModalOpen}
+          studentId={selectedStudentId}
         />
         <DeleteStudent
           isOpenModal={isDeleteModalOpen}
           setToClose={setDeleteModalOpen}
+          studentId={selectedStudentId}
         />
         <ViewStudentDetails
           isOpenModal={isViewModalOpen}
           setToClose={setViewModalOpen}
+          studentId={selectedStudentId}
         />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
           <button
             onClick={() => {
               setCreateModalOpen(true);
             }}
-            className="py-2 px-4 bg-blue-800 rounded-sm text-white"
+            className="py-2 px-4 bg-gradient-to-tr from-blue-950 to-blue-500  rounded-sm text-white"
           >
             Add Student
           </button>
@@ -53,11 +77,8 @@ const StudentsList = () => {
                   <th className="p-2  font-medium border border-gray-400">
                     Student Name
                   </th>
-                  <th className="p-2  font-medium border border-gray-400">
-                    Batch
-                  </th>
-                  <th className="p-2  font-medium border border-gray-400">
-                    Address
+                  <th className="p-2 sm:table-cell hidden font-medium border border-gray-400">
+                    Email Address
                   </th>
                   <th className="p-2  font-medium border border-gray-400">
                     Action
@@ -65,55 +86,40 @@ const StudentsList = () => {
                 </tr>
               </thead>
               <tbody>
-                {[
-                  {
-                    id: 1,
-                    name: "Ahmad",
-                    batch: 2,
-                    address: "Lahore",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 2,
-                    name: "Ali",
-                    batch: 2,
-                    address: "Lahore",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 3,
-                    name: "Akbar",
-                    batch: 2,
-                    address: "Lahore",
-                    date: "22/02/2024",
-                  },
-                ].map((student) => {
-                  const { id, batch, name, address } = student;
+                {studentData.map((student, index) => {
+                  const { _id, username, email } = student;
                   return (
-                    <tr key={id} className="text-center hover:bg-gray-100 h-12">
-                      <td className="p-2 border border-gray-300">{id}</td>
-                      <td className="p-2 border border-gray-300">{name}</td>
-                      <td className="p-2 border border-gray-300">{batch}</td>
-
-                      <td className="p-2 border border-gray-300">{address}</td>
-                      <td className="p-2 border border-gray-300 ">
+                    <tr
+                      key={index}
+                      className="text-center hover:bg-gray-100 h-12"
+                    >
+                      <td className="px-2 border border-gray-300">
+                        {index + 1}
+                      </td>
+                      <td className="px-2 border border-gray-300">
+                        {username}
+                      </td>
+                      <td className="px-2 border sm:table-cell hidden border-gray-300">
+                        {email}
+                      </td>
+                      <td className="px-2 border border-gray-300 ">
                         <div className="flex gap-5 p-2 justify-center">
-                          <div className="flex gap-5 p-2 justify-center">
+                          <div className="flex gap-5 px-2 justify-center">
                             <FaEye
                               onClick={() => {
-                                setViewModalOpen(true);
+                                handleIconClick(_id, setViewModalOpen);
                               }}
                               className="size-5 cursor-pointer text-blue-500"
                             />
                             <FaRegEdit
                               onClick={() => {
-                                setUpdateModalOpen(true);
+                                handleIconClick(_id, setUpdateModalOpen);
                               }}
                               className="size-5 cursor-pointer text-green-800"
                             />
                             <RiDeleteBin6Line
                               onClick={() => {
-                                setDeleteModalOpen(true);
+                                handleIconClick(_id, setDeleteModalOpen);
                               }}
                               className="size-5 cursor-pointer  text-red-500"
                             />
@@ -125,6 +131,11 @@ const StudentsList = () => {
                 })}
               </tbody>
             </table>
+            {loader && (
+              <div className="flex justify-center">
+                <Loader />
+              </div>
+            )}
           </div>
         </div>
       </div>

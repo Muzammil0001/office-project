@@ -7,9 +7,22 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { Fragment } from "react";
-import { RxCross2 } from "react-icons/rx";
+import { deleteUserApi } from "../../../../apis/user-api";
 
-const DeleteTeacher = ({ isOpenModal, setToClose }) => {
+const DeleteTeacher = ({ isOpenModal, setToClose, teacherId }) => {
+  const confirmationHandle = async () => {
+    try {
+      if (teacherId) {
+        const DeletedTeacher = await deleteUserApi(teacherId);
+        console.log(" DeletedTeacher:", DeletedTeacher);
+
+        setToClose(false);
+      }
+    } catch (error) {
+      console.error("Error fetching Teacher:", error);
+    }
+  };
+
   return (
     <Transition appear show={isOpenModal} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => {}} __demoMode>
@@ -28,54 +41,28 @@ const DeleteTeacher = ({ isOpenModal, setToClose }) => {
               <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <DialogTitle
                   as="h3"
-                  className="flex justify-between items-center mb-2 "
+                  className="flex justify-center items-center  "
                 >
-                  <span className="text-xl font-medium leading-6 text-gray-900">
-                    Teacher
+                  <span className="sm:text-xl mb-5 text-base font-medium leading-6 text-gray-900">
+                    Confirm To Delete Teacher
                   </span>
-                  <button
+                </DialogTitle>
+
+                <div className="mt-6 flex items-center gap-2 justify-center">
+                  <Button
+                    className="w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     type="button"
-                    className="ml-4 inline-flex justify-center rounded-md text-md font-medium text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     onClick={() => setToClose(false)}
                   >
-                    <RxCross2 className="size-5" />
-                  </button>
-                </DialogTitle>
-                <div className=" flex flex-col gap-2">
-                  <div className="">
-                    <div className=" font-medium text-base">Teacher Name:</div>
-                    <div className="text-sm">Lorem ipsum dolor sit amet.</div>
-                  </div>
-                  <div className="">
-                    <div className=" font-medium">Phone:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
-                  </div>
-                  <div className="">
-                    <div className=" font-medium">Address:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
-                  </div>
-                  <div className="">
-                    <div className=" font-medium">Course ID:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
-                  </div>
-                  <div className="">
-                    <div className=" font-medium">Created at:</div>
-                    <div className="text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Magni, corporis?
-                    </div>
-                  </div>
-                  <div className="mt-6 flex items-center justify-end">
-                    <Button
-                      className="inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                      type="button"
-                      onClick={(event) => {
-                        setToClose(false);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </div>
+                    Cancel
+                  </Button>
+                  <Button
+                    className="w-full inline-flex justify-center rounded-md border border-transparent bg-red-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    type="button"
+                    onClick={confirmationHandle}
+                  >
+                    Delete
+                  </Button>
                 </div>
               </DialogPanel>
             </TransitionChild>

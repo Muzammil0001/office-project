@@ -1,5 +1,4 @@
-const User = require('../models/user-model')
-
+const User = require("../models/user-model");
 
 // Create a new users<=====================>
 exports.createUser = async (req, res) => {
@@ -12,10 +11,10 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Get all userss<=====================>
+// Get all users<=====================>
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().populate("courseId", "courseName");
     res.status(200).send(users);
   } catch (error) {
     res.status(500).send(error);
@@ -35,10 +34,58 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+// Get a single user by Roles<=====================>
+
+exports.getUsersByRole = async (req, res) => {
+  try {
+    const { role } = req.query;
+    if (!role) {
+      return res.status(400).send({ message: "Role parameter is required." });
+    }
+
+    const users = await User.find({ role: role }).populate(
+      "courseId",
+      "courseName"
+    );
+    if (users.length === 0) {
+      return res
+        .status(404)
+        .send({ message: "No users found with the specified role." });
+    }
+    res.status(200).send(users);
+  } catch (error) {
+    console.error("Error getting users by role:", error);
+    res
+      .status(500)
+      .send({ message: "Internal Server Error", error: error.toString() });
+  }
+};
+
+// Get a single user by Roles<=====================>
+
+exports.countUsersByRole = async (req, res) => {
+  try {
+    const { role } = req.query;
+    if (!role) {
+      return res.status(400).send({ message: "Role parameter is required." });
+    }
+
+    const count = await User.countDocuments({ role: role });
+    res.status(200).send({ [`${role}Count`]: count });
+  } catch (error) {
+    console.error("Error getting users by role:", error);
+    res
+      .status(500)
+      .send({ message: "Internal Server Error", error: error.toString() });
+  }
+};
+
 // Update a user by IDs<=====================>
 exports.updateUserById = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (!user) {
       return res.status(404).send();
     }
@@ -55,7 +102,7 @@ exports.deleteUserById = async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-    res.status(200).send({message:"User Successfully deleted", user});
+    res.status(200).send({ message: "User Successfully deleted", user });
   } catch (error) {
     res.status(500).send(error);
   }

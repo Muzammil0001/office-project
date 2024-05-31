@@ -6,10 +6,37 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { getUserByIdApi } from "../../../../apis/user-api";
 
-const ViewStudentDetails = ({ isOpenModal, setToClose }) => {
+const ViewStudentDetails = ({ isOpenModal, setToClose, studentId }) => {
+  const [student, setStudent] = useState({
+    username: "",
+    email: "",
+    phone: "",
+    address: "",
+    courseId: "",
+    createdAt: "",
+  });
+
+  useEffect(() => {
+    if (!isOpenModal) return;
+
+    const GetStudentFunc = async () => {
+      try {
+        const fetchStudent = await getUserByIdApi(studentId);
+        setStudent(fetchStudent);
+        console.log("Student:", fetchStudent);
+      } catch (error) {
+        console.error("Error fetching Student:", error);
+      }
+    };
+    if (studentId) {
+      GetStudentFunc();
+    }
+  }, [studentId, isOpenModal]);
+
   return (
     <Transition appear show={isOpenModal} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={() => {}} __demoMode>
@@ -44,25 +71,24 @@ const ViewStudentDetails = ({ isOpenModal, setToClose }) => {
                 <div className=" flex flex-col gap-2">
                   <div className="">
                     <div className=" font-medium text-base">Student Name:</div>
-                    <div className="text-sm">Lorem ipsum dolor sit amet.</div>
+                    <div className="text-sm">{student.username}</div>
                   </div>
                   <div className="">
+                    <div className=" font-medium">Email:</div>
+                    <div className="text-sm">{student.email}</div>
+                  </div> 
+                  <div className="">
                     <div className=" font-medium">Phone:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
+                    <div className="text-sm">{student.phone}</div>
                   </div>
                   <div className="">
                     <div className=" font-medium">Address:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
+                    <div className="text-sm">{student.address}</div>
                   </div>
                   <div className="">
                     <div className=" font-medium">Course ID:</div>
-                    <div className="text-sm">Lorem, ipsum.</div>
-                  </div>
-                  <div className="">
-                    <div className=" font-medium">Created at:</div>
                     <div className="text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Magni, corporis?
+                      {student.courseId || "Course not select yet"}
                     </div>
                   </div>
                 </div>

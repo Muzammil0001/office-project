@@ -1,26 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const User = require("./user-model");
 
-const discussionSchema = new Schema({
-  title: {
-    type: String,
-    required: true
+const discussionSchema = new Schema(
+  {
+    message: {
+      type: String,
+      required: true,
+    },
+    senderId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    receiverId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  content: {
-    type: String,
-    required: true
-  },
-  createdBy: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  relatedQuiz: {
-    type: Schema.Types.ObjectId,
-    ref: 'Quiz',
-    required: false
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-const Discussion = mongoose.model('Discussion', discussionSchema);
+const Discussion = mongoose.model("Discussion", discussionSchema);
 module.exports = Discussion;

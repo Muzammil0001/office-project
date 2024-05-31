@@ -90,15 +90,15 @@ const ClassesList = () => {
                       key={index}
                       className="text-center hover:bg-gray-100 h-12"
                     >
-                      <td className="p-2 border border-gray-300">{batch}</td>
+                      <td className=" border border-gray-300">{batch}</td>
 
-                      <td className="p-2 border border-gray-300">
+                      <td className=" border border-gray-300">
                         {instructor}
                       </td>
-                      <td className="p-2 border border-gray-300">{date}</td>
-                      <td className="p-2 border border-gray-300 ">
-                        <div className="flex gap-5 p-2 justify-center">
-                          <div className="flex gap-5 p-2 justify-center">
+                      <td className=" border border-gray-300">{date}</td>
+                      <td className=" border border-gray-300 ">
+                        <div className="flex gap-5  justify-center">
+                          <div className="flex gap-5  justify-center">
                             <FaEye
                               onClick={() => {
                                 setViewModalOpen(true);
