@@ -15,9 +15,7 @@ const StudentsList = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
-  const [studentData, setStudentData] = useState([
-    { _id: "", username: "", email: "" },
-  ]);
+  const [studentData, setStudentData] = useState([]);
 
   const handleIconClick = (id, setModalOpen) => {
     setSelectedStudentId(id);
@@ -86,7 +84,7 @@ const StudentsList = () => {
                 </tr>
               </thead>
               <tbody>
-                {studentData.map((student, index) => {
+                {studentData?.map((student, index) => {
                   const { _id, username, email } = student;
                   return (
                     <tr

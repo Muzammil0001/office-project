@@ -1,11 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const dbConfig = require("./utils/database-connection.js");
-const userRoutes = require("./routes/user-routes");
-const quizRoutes = require("./routes/quiz-routes");
-const resultRoutes = require("./routes/result-routes");
-const discussionRoutes = require("./routes/discussion-routes");
-const announcementRoutes = require("./routes/announcement-routes");
+const userRoutes = require("./routes/user-routes.js");
+const quizRoutes = require("./routes/quiz-routes.js");
+const resultRoutes = require("./routes/result-routes.js");
+const discussionRoutes = require("./routes/discussion-routes.js");
+const announcementRoutes = require("./routes/announcement-routes.js");
 const courseRoutes = require("./routes/course-routes.js");
 const assignedCourseRoutes = require("./routes/assigned-course-routes.js");
 const notificationRoutes = require("./routes/notification-routes.js");

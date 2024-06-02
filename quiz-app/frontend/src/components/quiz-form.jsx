@@ -5,6 +5,7 @@ import QuizQuestion from "./quiz-questions";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import quizSchema from "../config/auth-schema/quiz-form-schema";
+import MultiSelectInput from "./multiselect";
 
 const QuizForm = () => {
   const [courses, setCourses] = useState([]);
@@ -25,6 +26,7 @@ const QuizForm = () => {
   ]);
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -33,11 +35,13 @@ const QuizForm = () => {
   });
 
   const handleCourseChange = async (courseId) => {
+    
     setSelectedCourse(courseId);
     console.log("setSelectedCourse:", courseId);
     if (courseId) {
       try {
         const enrolledStudents = await getStudentsByCourse(courseId);
+        console.log("enrolledStudents:", enrolledStudents);
         setStudents(enrolledStudents);
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -47,13 +51,19 @@ const QuizForm = () => {
     }
   };
 
-  const handleStudentChange = (event) => {
-    const selectedValue = event.target.value;
-    if (selectedValue === "allStudents") {
-      setSelectedStudents(students.map((student) => student._id));
-    } else {
-      setSelectedStudents([selectedValue]);
-    }
+  const handleStudentSelect = (selectedList) => {
+    
+    setSelectedStudents(selectedList.map((student) => student._id));
+  };
+
+  const handleStudentRemove = (selectedList) => {
+    setSelectedStudents(selectedList.map((student) => student._id));
+  };
+
+  const handleStudentChange = (selectedStudentIds) => {
+   console.log("selectedStudentIds:",selectedStudentIds)
+      setSelectedStudents(selectedStudentIds.map((option)=>option.value));
+     
   };
 
   const addQuestion = () => {
@@ -162,6 +172,7 @@ const QuizForm = () => {
 
   const onSubmit = (data) => {
     data.questions = questions;
+    data.studentId=selectedStudents;
     console.log("Quiz Form Data:", data);
     if (questions.length === 0 || !selectedCourse) {
       alert(
@@ -205,27 +216,37 @@ const QuizForm = () => {
             </p>
           </div>
 
-          <div>
-            <select
-              {...register("studentId")}
-              className="input w-full h-10 p-2 shadow-md rounded"
-              onChange={handleStudentChange}
-            >
-              <option value="">Select Student</option>
-              {selectedCourse && students && (
-                <option value="allStudents">All Students</option>
-              )}
-              {students?.map((student, idx) => (
-                <option key={idx} value={student._id}>
-                  {student.username}
-                </option>
-              ))}
-            </select>
-            <p className="mx-2 text-red-500 text-[12px] pt-1">
-              {errors.studentId?.message}
-            </p>
-          </div>
-
+          <MultiSelectInput
+            students={students}
+            control={control}
+            name="studentId"
+            errors={errors}
+            selectedStudent={(selectedStudentIds)=>handleStudentChange(selectedStudentIds)}
+          />
+{
+          // <div>
+          //   <select
+          //     {...register("studentId")}
+          //     className="input w-full h-10 p-2 shadow-md rounded"
+          //     onChange={handleStudentChange}
+          //   >
+          //     <option value="">Select Student</option>
+          //     {selectedCourse && students && (
+          //       <option value="allStudents">All Students</option>
+          //     )}
+          //     {students?.map((student, idx) => {
+          //       return (
+          //         <option key={idx} value={student._id}>
+          //           {student.username}
+          //         </option>
+          //       );
+          //     })}
+          //   </select>
+          //   <p className="mx-2 text-red-500 text-[12px] pt-1">
+          //     {errors.studentId?.message}
+          //   </p>
+          // </div>
+ }
           <div>
             <input
               type="number"

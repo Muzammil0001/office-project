@@ -69,7 +69,7 @@ const QuizQuestion = ({
             disabled
             value={question.answer || ""}
             placeholder="Answer"
-            className="input w-full mb-3 h-10 p-2 border rounded"
+            className="input w-full mb-3 h-10 p-2 border rounded text-black"
           />
         )}
         {quizType === "multipleChoice" &&

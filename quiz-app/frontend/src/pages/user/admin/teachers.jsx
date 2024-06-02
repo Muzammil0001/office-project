@@ -15,9 +15,7 @@ const TeachersList = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedTeacherId, setSelectedTeacherId] = useState(null);
-  const [teacherData, setTeacherData] = useState([
-    { _id: "", username: "", email: "", courseId: "" },
-  ]);
+  const [teacherData, setTeacherData] = useState([]);
 
   const handleIconClick = (id, setModalOpen) => {
     setSelectedTeacherId(id);
@@ -32,7 +30,7 @@ const TeachersList = () => {
       console.log(response);
     };
     GetTeachersFunc();
-  }, [teacherData]);
+  }, []);
   return (
     <>
       <div className="h-full min-h-[100vh] w-full">
