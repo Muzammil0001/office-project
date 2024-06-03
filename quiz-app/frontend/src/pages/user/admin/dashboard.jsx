@@ -35,7 +35,7 @@ const Dashboard = () => {
       ]);
     };
     countUsersFunc();
-  }, [dataCount]);
+  }, []);
   console.log("userCounts:", dataCount);
   return (
     <>
