@@ -38,6 +38,8 @@ export const getUserByIRole = async (role) => {
     return response.data;
   } catch (error) {
     console.error("Error in getting User:", error);
+    console.error("Error data announcement:", error.response.data);
+
   }
 };
 

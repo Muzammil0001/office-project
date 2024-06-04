@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import quizSchema from "../config/auth-schema/quiz-form-schema";
 import MultiSelectInput from "./multiselect";
+import { postQuiz } from "../apis/quizzes-apis";
 
 const QuizForm = () => {
   const [courses, setCourses] = useState([]);
@@ -35,7 +36,6 @@ const QuizForm = () => {
   });
 
   const handleCourseChange = async (courseId) => {
-    
     setSelectedCourse(courseId);
     console.log("setSelectedCourse:", courseId);
     if (courseId) {
@@ -51,19 +51,9 @@ const QuizForm = () => {
     }
   };
 
-  const handleStudentSelect = (selectedList) => {
-    
-    setSelectedStudents(selectedList.map((student) => student._id));
-  };
-
-  const handleStudentRemove = (selectedList) => {
-    setSelectedStudents(selectedList.map((student) => student._id));
-  };
-
   const handleStudentChange = (selectedStudentIds) => {
-   console.log("selectedStudentIds:",selectedStudentIds)
-      setSelectedStudents(selectedStudentIds.map((option)=>option.value));
-     
+    console.log("selectedStudentIds:", selectedStudentIds);
+    setSelectedStudents(selectedStudentIds.map((option) => option.value));
   };
 
   const addQuestion = () => {
@@ -170,17 +160,25 @@ const QuizForm = () => {
     }
   };
 
-  const onSubmit = (data) => {
-    data.questions = questions;
-    data.studentId=selectedStudents;
-    console.log("Quiz Form Data:", data);
-    if (questions.length === 0 || !selectedCourse) {
-      alert(
-        "Please ensure you have selected a course and added at least one question."
-      );
-      return;
-    }
-    console.log(questions);
+  const onSubmit = async (data) => {
+    try {
+      if (quizType === "multipleChoice") {
+        if (questions.some((question) => question.answer === "")) {
+          alert("Answers must be selected for each question");
+        }
+      }
+      data.questions = questions;
+      data.studentId = selectedStudents;
+      console.log("Quiz Form Data:", data);
+      if (questions.length === 0 || !selectedCourse) {
+        alert(
+          "Please ensure you have selected a course and added at least one question."
+        );
+      }
+      const response = await postQuiz(data);
+
+      console.log(questions);
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -200,7 +198,9 @@ const QuizForm = () => {
           <div>
             <select
               {...register("courseId")}
-              className="input w-full h-10 p-2 shadow-md rounded"
+              className={`input w-full h-10 p-2 shadow-md rounded ${
+                errors.courseId ? "border border-red-600" : ""
+              }`}
               value={selectedCourse}
               onChange={(e) => handleCourseChange(e.target.value)}
             >
@@ -221,38 +221,19 @@ const QuizForm = () => {
             control={control}
             name="studentId"
             errors={errors}
-            selectedStudent={(selectedStudentIds)=>handleStudentChange(selectedStudentIds)}
+            selectedStudent={(selectedStudentIds) =>
+              handleStudentChange(selectedStudentIds)
+            }
           />
-{
-          // <div>
-          //   <select
-          //     {...register("studentId")}
-          //     className="input w-full h-10 p-2 shadow-md rounded"
-          //     onChange={handleStudentChange}
-          //   >
-          //     <option value="">Select Student</option>
-          //     {selectedCourse && students && (
-          //       <option value="allStudents">All Students</option>
-          //     )}
-          //     {students?.map((student, idx) => {
-          //       return (
-          //         <option key={idx} value={student._id}>
-          //           {student.username}
-          //         </option>
-          //       );
-          //     })}
-          //   </select>
-          //   <p className="mx-2 text-red-500 text-[12px] pt-1">
-          //     {errors.studentId?.message}
-          //   </p>
-          // </div>
- }
+
           <div>
             <input
               type="number"
               placeholder="Time Limit (minutes)"
               {...register("timeLimit")}
-              className="input w-full h-10 p-2 shadow-md rounded"
+              className={`input w-full h-10 p-2 shadow-md rounded ${
+                errors.timeLimit ? "border border-red-600" : ""
+              }`}
             />
             <p className="mx-2 text-red-500 text-[12px] pt-1">
               {errors.timeLimit?.message}
@@ -265,7 +246,9 @@ const QuizForm = () => {
               min="0"
               placeholder="Total Marks"
               {...register("totalMarks")}
-              className="input w-full h-10 p-2 shadow-md rounded"
+              className={`input w-full h-10 p-2 shadow-md rounded ${
+                errors.totalMarks ? "border border-red-600" : ""
+              }`}
             />
             <p className="mx-2 text-red-500 text-[12px] pt-1">
               {errors.totalMarks?.message}
@@ -277,7 +260,9 @@ const QuizForm = () => {
               type="date"
               placeholder="Due Date"
               {...register("dueDate")}
-              className="input w-full h-10 p-2 shadow-md rounded"
+              className={`input w-full h-10 p-2 shadow-md rounded ${
+                errors.dueDate ? "border border-red-600" : ""
+              }`}
               min={new Date().toISOString().split("T")[0]}
             />
             <p className="mx-2 text-red-500 text-[12px] pt-1">
@@ -286,7 +271,11 @@ const QuizForm = () => {
           </div>
 
           <div>
-            <select className="input w-full h-10 p-2 shadow-md rounded">
+            <select
+              className="input w-full h-10 p-2 shadow-md rounded"
+              {...register("isActive")}
+              
+            >
               <option value="true">Active</option>
               <option value="false">Inactive</option>
             </select>
@@ -299,7 +288,9 @@ const QuizForm = () => {
               type="text"
               placeholder="Quiz Title"
               {...register("quizTitle")}
-              className="input text-center  flex-1 w-full h-10 p-2 shadow-md rounded"
+              className={`input w-full h-10 p-2 shadow-md rounded ${
+                errors.quizTitle ? "border border-red-600" : ""
+              }`}
             />
             <p className="mx-2 text-red-500 text-[12px] pt-1">
               {errors.quizTitle?.message}

@@ -46,7 +46,7 @@ const MultiSelectInput = ({
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const options = students.map((user) => ({
+  const options = students?.map((user) => ({
     value: user._id,
     label: user.username,
   }));
@@ -54,7 +54,7 @@ const MultiSelectInput = ({
   const allOption = { value: "all", label: "Select All" };
 
   const handleChange = (selected) => {
-    if (selected.some((option) => option.value === "all")) {
+    if (selected?.some((option) => option.value === "all")) {
       const allSelectedOptions = options?.filter(
         (option) => option.value !== "all"
       );
@@ -66,8 +66,41 @@ const MultiSelectInput = ({
     }
   };
 
+  const getCustomStyles = (error) => ({
+    control: (provided) => ({
+      ...provided,
+      width: "100%",
+      maxHeight: "40px",
+      boxShadow:
+        "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+      borderRadius: "0.375rem",
+      border: error ? "1px solid red" : "none", // Dynamic border based on error
+    }),
+    menu: (provided) => ({
+      ...provided,
+      width: "100%",
+      backgroundColor: "white",
+      top: "15",
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: "#e2e8f0",
+      borderRadius: "0.375rem",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: "#1a202c",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: "#1a202c",
+      ":hover": {
+        backgroundColor: "#cbd5e0",
+        color: "#2d3748",
+      },
+    }),
+  });
 
- 
   console.log("selectedOption:", selectedOption);
   return (
     <>
@@ -84,8 +117,8 @@ const MultiSelectInput = ({
                 handleChange(selected);
                 field.onChange(selected);
               }}
-              options={[allOption, ...options]}
-              styles={customStyles}
+              options={options ? [allOption, ...options] : []}
+              styles={getCustomStyles(errors[name])}
               placeholder="Select Students"
             />
           )}
