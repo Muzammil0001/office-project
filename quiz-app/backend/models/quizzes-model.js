@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const Course = require("./course-model");
 const Schema = mongoose.Schema;
 const User = require("./user-model");
+const Course = require("./course-model");
 
 const quizSchema = new Schema(
   {
@@ -10,7 +10,12 @@ const quizSchema = new Schema(
     questions: [
       {
         questionText: { type: String, required: true },
-        options: [{ type: String }],
+        options: [
+          {
+            optionText: { type: String, required: true },
+            isSelected: { type: Boolean, required: true },
+          },
+        ],
         answer: { type: String, required: true },
       },
     ],
@@ -39,14 +44,15 @@ const quizSchema = new Schema(
         required: true,
       },
     ],
-    courseName: {
+    courseId: {
       type: Schema.Types.ObjectId,
-      ref: Course,
+      ref: "Course",
       required: true,
     },
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
-const QuizModel = new mongoose.model("Quiz", quizSchema);
-module.exports = QuizModel;
+
+const Quiz = mongoose.model("Quiz", quizSchema);
+module.exports = Quiz;
