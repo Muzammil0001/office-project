@@ -30,7 +30,7 @@ const Features = () => {
           return (
             <>
               <div
-                className="border border-blue-900 flex font-medium flex-col items-center w-[300px] h-[350px] bg-gradient-to-t from-blue-900 to-transparent rounded-3xl py-20 px-5 cursor-pointer shadow-slate-300 shadow-md hover:mt-[-5px] duration-300"
+                className="border border-gray-300 flex font-medium flex-col items-center w-[300px] h-[350px] rounded-3xl py-20 px-5 cursor-pointer shadow-slate-300 shadow-md hover:mt-[-5px] duration-300"
                 key={item.id}
               >
                 <h1 className=" font-nunito text-4xl mb-5 text-center">

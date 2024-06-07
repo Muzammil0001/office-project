@@ -42,7 +42,7 @@ const MultiSelectInput = ({
   name,
   errors,
   students,
-  selectedStudent,
+  selectedStudents,
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -59,10 +59,10 @@ const MultiSelectInput = ({
         (option) => option.value !== "all"
       );
       setSelectedOption(allSelectedOptions);
-      selectedStudent(allSelectedOptions);
+      selectedStudents(allSelectedOptions);
     } else {
       setSelectedOption(selected);
-      selectedStudent(selected.map((option) => option.value));
+      selectedStudents(selected);
     }
   };
 

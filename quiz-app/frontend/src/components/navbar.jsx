@@ -65,13 +65,17 @@ const Navbar = () => {
               Services
             </a>
             <a href="#" className="mb-4 text-lg block w-full text-center py-1">
-              Leaderboard
+              Courses
             </a>
             <a href="#" className="mb-4 text-lg block w-full text-center py-1">
               Contact
             </a>
-            <a href="#" className="mb-4 text-lg block w-full text-center py-1">
-              Logout
+
+            <a
+              href="/signin"
+              className="mb-4 text-lg block w-full text-center py-1"
+            >
+              Login
             </a>
           </div>
         </div>

@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs");
 const User = require("../models/user-model");
 
 // Create a new users<=====================>
@@ -8,24 +7,6 @@ exports.createUser = async (req, res) => {
     const token = await user.authTokenGenerator();
     await user.save();
 
-    res.status(201).send(user); 
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
-
-exports.signinUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const fetchedUser = await User.findOne({ email });
-    const isMatch = await bcrypt.compare(password, fetchedUser.password);
-
-    const token = await user.authTokenGenerator();
-    res.cookie("jwt", token, {
-      expires: new Date(Date.now() + 1000 * 60 * 10),
-    });
-    console.log("cookie:", cookie);
-    await user.save();
     res.status(201).send(user);
   } catch (error) {
     res.status(400).send(error);

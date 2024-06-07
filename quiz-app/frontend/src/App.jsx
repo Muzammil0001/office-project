@@ -3,7 +3,7 @@ import SignIn from "./pages/auth/signin";
 import SignUp from "./pages/auth/signup";
 import Home from "./pages";
 
-import AdminDashboard from "./pages/user/admin";
+import AdminMain from "./pages/user/admin/";
 import QuizForm from "./components/quiz-form";
 import Dashboard from "./pages/user/admin/dashboard";
 import QuizzesList from "./pages/user/admin/quizzes";
@@ -17,14 +17,15 @@ import StudentsList from "./pages/user/admin/students";
 
 import TeacherDashboard from "./pages/user/teacher";
 
-import StudentDashbaord from "./pages/user/student";
+import StudentMain from "./pages/user/student/";
+import StudentDashboard from "./pages/user/student/dashboard";
 import Quizzes from "./pages/user/student/quizzes";
 import StudyMaterial from "./pages/user/student/study-material";
 import LeaderBoard from "./pages/user/student/leaderboard";
 import Courses from "./pages/user/student/courses";
 import StudentProfileSetting from "./pages/user/student/setting";
 import StudentNotify from "./pages/user/student/notification";
-import StudentDashboard from "./pages/user/student";
+import StudentChat from "./pages/user/student/chat";
 
 const App = () => {
   const isAuthenticated = localStorage.getItem("token") !== null;
@@ -38,22 +39,36 @@ const App = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route
-            path="student"
+            path="/create-quiz"
+            element={
+              role === "teacher" || (role === "admin" && isAuthenticated) ? (
+                <QuizForm />
+              ) : (
+                <h1 className="text-center text-xl text-red-600 mt-5">
+                  401 Unauthorized Access.
+                </h1>
+              )
+            }
+          />
+
+          <Route
+            path="students"
             element={
               role === "student" && isAuthenticated ? (
-                <StudentDashbaord />
+                <StudentMain />
               ) : (
                 <Navigate to="/signin" />
               )
             }
           >
+            <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="quizzes" element={<Quizzes />} />
             <Route path="study-material" element={<StudyMaterial />} />
             <Route path="leaderboard" element={<LeaderBoard />} />
             <Route path="profile" element={<StudentProfileSetting />} />
             <Route path="courses" element={<Courses />} />
             <Route path="notifications" element={<StudentNotify />} />
-            <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="chat" element={<StudentChat />} />
           </Route>
 
           <Route
@@ -71,7 +86,7 @@ const App = () => {
             path="/admin"
             element={
               role === "admin" && isAuthenticated ? (
-                <AdminDashboard />
+                <AdminMain />
               ) : (
                 <Navigate to="/signin" />
               )
@@ -79,7 +94,6 @@ const App = () => {
           >
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="quizzes" element={<QuizzesList />} />
-            <Route path="quizzes/create-quiz" element={<QuizForm />} />
             <Route path="profile" element={<Profile />} />
             <Route path="notifications" element={<Notify />} />
             <Route path="announcements" element={<Chat />} />
@@ -89,7 +103,14 @@ const App = () => {
             <Route path="students" element={<StudentsList />} />
           </Route>
 
-          {/* <Route path="*" element={<Home />} /> */}
+          <Route
+            path="*"
+            element={
+              <h1 className="text-center text-xl text-red-600 mt-5">
+                404 Page Not Found.
+              </h1>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>

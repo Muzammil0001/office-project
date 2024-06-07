@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Course = require("./course-model");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const hashPassword = require("../utils/password-hashing");
 const validateEmail = require("../utils/email-validator");
 
@@ -50,6 +50,7 @@ const userSchema = new Schema(
     ],
     userAvatar: {
       type: String,
+      default: () => "../uploads/user.png",
       validate: {
         validator: function (v) {
           return /\.(jpg|jpeg|png|gif)$/i.test(v);
@@ -61,7 +62,7 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.methods.authTokenGenerator = async function (){
+userSchema.methods.authTokenGenerator = async function () {
   const newToken = jwt.sign(
     { _id: this._id.toString() },
     process.env.JWT_SECRET,

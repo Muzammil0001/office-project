@@ -1,11 +1,17 @@
 const Quiz = require("../models/quizzes-model");
 
-// Create a new quiz=====================
 exports.createQuiz = async (req, res) => {
   console.log("Data Posting:", req.body);
   try {
-    const newQuiz = new Quiz(req.body);
+    const { studentId, ...quizData } = req.body;
+
+    const newQuiz = new Quiz({
+      ...quizData,
+      studentId: studentId.map((student) => student.value),
+    });
+
     await newQuiz.save();
+
     res
       .status(201)
       .send({ message: "Quiz created successfully", quiz: newQuiz });
@@ -19,7 +25,10 @@ exports.createQuiz = async (req, res) => {
 // Get all quizzes<=====================>
 exports.getAllQuizzes = async (req, res) => {
   try {
-    const quizzes = await Quiz.find({});
+    const quizzes = await Quiz.find().populate({
+      path: "courseId",
+      select: "courseName _id",
+    });
     res.status(200).send(quizzes);
   } catch (error) {
     res

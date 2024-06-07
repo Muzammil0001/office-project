@@ -8,10 +8,14 @@ import {
 import { IoBook, IoDocumentText } from "react-icons/io5";
 import { FaUser, FaUserGraduate } from "react-icons/fa";
 import { Outlet } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Sidebar from "../../../components/sidebar";
+
 import Dashboard from "./dashboard";
 
 const AdminDashboard = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -77,7 +81,11 @@ const AdminDashboard = () => {
           </button>
         </nav>
         <main className="flex p-4 ms-0 lg:ml-64">
-          <Outlet />
+          {currentPath == "/admin/" || currentPath == "/admin" ? (
+            <StudentDashboard />
+          ) : (
+            <Outlet />
+          )}
         </main>
       </div>
     </div>

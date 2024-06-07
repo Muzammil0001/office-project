@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getCoursesApi } from "../apis/course-apis";
 import { getStudentsByCourse } from "../apis/enrolled-courses";
 import QuizQuestion from "./quiz-questions";
@@ -9,9 +9,9 @@ import MultiSelectInput from "./multiselect";
 import { postQuiz } from "../apis/quizzes-apis";
 
 const QuizForm = () => {
-  const latestSelectedStudentsRef = useRef(null);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedStudents, setSelectedStudents] = useState([]);
   const [students, setStudents] = useState([]);
   const [quizType, setQuizType] = useState("multipleChoice");
   const [questions, setQuestions] = useState([
@@ -30,13 +30,19 @@ const QuizForm = () => {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(quizSchema),
   });
 
+  const handleSelectedStudents = async (selectedStd) => {
+    setSelectedStudents(selectedStd);
+  };
+
   const handleCourseChange = async (courseId) => {
     setSelectedCourse(courseId);
+
     console.log("setSelectedCourse:", courseId);
     if (courseId) {
       try {
@@ -49,10 +55,6 @@ const QuizForm = () => {
     } else {
       setStudents([]);
     }
-  };
-
-  const handleStudentChange = (selectedStudentIds) => {
-    latestSelectedStudentsRef.current = selectedStudentIds;
   };
 
   const addQuestion = () => {
@@ -158,21 +160,17 @@ const QuizForm = () => {
       setQuestions(questions.filter((question) => question.id !== questionId));
     }
   };
-
   const onSubmit = async (data) => {
-    console.log(
-      "onSubmit selectedStudents:",
-      latestSelectedStudentsRef.current
-    );
     try {
-      const selectedStudents = handleStudentChange();
+      delete data.studentId;
+      data.studentId = selectedStudents?.map((student) => student);
       if (quizType === "multipleChoice") {
         if (questions.some((question) => question.answer === "")) {
           alert("Answers must be selected for each question");
         }
       }
       data.questions = questions;
-      data.studentId = latestSelectedStudentsRef.current;
+      data.createdBy = JSON.parse(localStorage.getItem("user"))._id;
       console.log("Quiz Form Data:", data);
       if (questions.length === 0 || !selectedCourse) {
         alert(
@@ -180,7 +178,7 @@ const QuizForm = () => {
         );
       }
       await postQuiz(data);
-      // reset();
+      reset();
     } catch (error) {
       console.error("Failed to create Quiz:", error);
     }
@@ -226,9 +224,9 @@ const QuizForm = () => {
             control={control}
             name="studentId"
             errors={errors}
-            selectedStudent={(selectedStudentIds) =>
-              handleStudentChange(selectedStudentIds)
-            }
+            selectedStudents={(selectedStd) => {
+              handleSelectedStudents(selectedStd);
+            }}
           />
 
           <div>

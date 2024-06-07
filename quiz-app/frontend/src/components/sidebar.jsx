@@ -1,9 +1,11 @@
 import React from "react";
-import { courseImage5 } from "../config/constants/images";
+import { userPng } from "../config/constants/images";
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const Sidebar = ({ menuItems, isSidebarOpen, toggleSidebar }) => {
+  const user = JSON.parse(localStorage.getItem("user")) || null;
+  const { username, role, email, userAvatar } = user;
   return (
     <>
       <div
@@ -23,14 +25,14 @@ const Sidebar = ({ menuItems, isSidebarOpen, toggleSidebar }) => {
         <div className="mt-4">
           <div className="mb-5 flex flex-col justify-center items-center">
             <img
-              className="rounded-full size-14 lg:size-20"
-              src={courseImage5}
+              className="rounded-full w-14 lg:w-20"
+              src={userAvatar || userPng}
               alt="profile"
             />
             <div className="mt-2 text-center">
-              <p className="text-lg font-medium text-gray-700">Ali</p>
+              <p className="text-lg font-medium text-gray-700">{username}</p>
               <div className="w-32 h-8 py-1 px-3 bg-gray-700 text-white rounded-full flex justify-center items-center">
-                Admin
+                {role}
               </div>
             </div>
           </div>
