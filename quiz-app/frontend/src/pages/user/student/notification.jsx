@@ -1,4 +1,4 @@
-const Notify = () => {
+const StudentNotify = () => {
   const time = new Date().toLocaleTimeString();
   const date = new Date().toLocaleDateString();
   return (
@@ -39,4 +39,4 @@ const Notify = () => {
   );
 };
 
-export default Notify;
+export default StudentNotify;

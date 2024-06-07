@@ -2,21 +2,42 @@ import { signInImage } from "../../config/constants/images";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginSchema from "../../config/auth-schema/signin-schema";
-import { useState } from "react";
+import { signinUser } from "../../apis/user-api";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  console.log("formData=>", formData);
+  const navigation = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    console.log("data:", data);
+    const response = await signinUser(data);
+    console.log("Signin Response:"), response.data;
+    localStorage.setItem("token", JSON.stringify(response.data.token));
+    localStorage.setItem("user", JSON.stringify(response.data.user));
+    reset();
+
+    switch (response.data.user.role) {
+      case "admin":
+        navigation("/admin/dashboard");
+
+        break;
+      case "student":
+        navigation("/student/dashboard");
+        break;
+      case "teacher":
+        navigation("/teacher/dashboard");
+        break;
+      default:
+        throw new Error("Unauthorized role");
+    }
   };
 
   return (
@@ -40,7 +61,6 @@ const SignIn = () => {
                 }`}
                 type="text"
                 placeholder="Email"
-                autoComplete="off"
                 {...register("email")}
               />
               <p className="mx-4 text-red-500 text-sm mt-[-10px]">
@@ -52,7 +72,6 @@ const SignIn = () => {
                 }`}
                 type="password"
                 placeholder="Password"
-                autoComplete="off"
                 {...register("password")}
               />
               <p className="mx-4 text-red-500 text-sm mt-[-10px]">

@@ -132,14 +132,7 @@ const StudentDashboard = () => {
           </button>
         </nav>
         <main className="flex p-4 ms-0 lg:ml-64">
-          {activeComponent === "dashboard" && <Dashboard />}
-          {activeComponent === "quiz" && <Quizzes />}
-          {activeComponent === "studyMaterial" && <StudyMaterial />}
-          {activeComponent === "leaderboard" && <LeaderBoard />}
-          {activeComponent === "chat" && <Chat />}
-          {activeComponent === "courses" && <Courses />}
-          {activeComponent === "notify" && <Notify />}
-          {activeComponent === "setting" && <StudentProfileSetting />}
+          
         </main>
       </div>
     </div>

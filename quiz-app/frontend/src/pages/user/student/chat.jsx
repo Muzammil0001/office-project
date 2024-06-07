@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const Chat = () => {
+const StudentChat = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
 
   const chatEndRef = useRef(null);
 
-
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatHistory]);
-
 
   const sendMessage = () => {
     if (message.trim()) {
@@ -23,7 +21,6 @@ const Chat = () => {
       setMessage("");
     }
   };
-
 
   const handleChange = (event) => {
     setMessage(event.target.value);
@@ -41,9 +38,7 @@ const Chat = () => {
     <>
       <div className="w-full flex flex-col items-center justify-center  bg-gray-100 p-4 min-h-[80vh]">
         <div className="w-full max-w-[800px] bg-white rounded-lg shadow-lg p-2 sm:p-6">
-          <h1 className="text-lg font-semibold text-gray-800 mb-4">
-            Chat
-          </h1>
+          <h1 className="text-lg font-semibold text-gray-800 mb-4">Chat</h1>
 
           <div
             className="h-80 overflow-y-auto mb-4 p-3 bg-gray-50 rounded"
@@ -80,4 +75,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default StudentChat;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getCoursesApi } from "../apis/course-apis";
 import { getStudentsByCourse } from "../apis/enrolled-courses";
 import QuizQuestion from "./quiz-questions";
@@ -9,9 +9,9 @@ import MultiSelectInput from "./multiselect";
 import { postQuiz } from "../apis/quizzes-apis";
 
 const QuizForm = () => {
+  const latestSelectedStudentsRef = useRef(null);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedStudents, setSelectedStudents] = useState([]);
   const [students, setStudents] = useState([]);
   const [quizType, setQuizType] = useState("multipleChoice");
   const [questions, setQuestions] = useState([
@@ -52,8 +52,7 @@ const QuizForm = () => {
   };
 
   const handleStudentChange = (selectedStudentIds) => {
-    console.log("selectedStudentIds:", selectedStudentIds);
-    setSelectedStudents(selectedStudentIds.map((option) => option.value));
+    latestSelectedStudentsRef.current = selectedStudentIds;
   };
 
   const addQuestion = () => {
@@ -161,24 +160,30 @@ const QuizForm = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log(
+      "onSubmit selectedStudents:",
+      latestSelectedStudentsRef.current
+    );
     try {
+      const selectedStudents = handleStudentChange();
       if (quizType === "multipleChoice") {
         if (questions.some((question) => question.answer === "")) {
           alert("Answers must be selected for each question");
         }
       }
       data.questions = questions;
-      data.studentId = selectedStudents;
+      data.studentId = latestSelectedStudentsRef.current;
       console.log("Quiz Form Data:", data);
       if (questions.length === 0 || !selectedCourse) {
         alert(
           "Please ensure you have selected a course and added at least one question."
         );
       }
-      const response = await postQuiz(data);
-
-      console.log(questions);
-    } catch (error) {}
+      await postQuiz(data);
+      // reset();
+    } catch (error) {
+      console.error("Failed to create Quiz:", error);
+    }
   };
 
   useEffect(() => {
@@ -204,7 +209,7 @@ const QuizForm = () => {
               value={selectedCourse}
               onChange={(e) => handleCourseChange(e.target.value)}
             >
-              <option value="">Select Course</option>
+              <option value=""> --Select Course-- </option>
               {courses?.map((course, idx) => (
                 <option key={idx} value={course._id}>
                   {course.courseName}
@@ -228,6 +233,7 @@ const QuizForm = () => {
 
           <div>
             <input
+              min={0}
               type="number"
               placeholder="Time Limit (minutes)"
               {...register("timeLimit")}
@@ -243,7 +249,7 @@ const QuizForm = () => {
           <div>
             <input
               type="number"
-              min="0"
+              min={0}
               placeholder="Total Marks"
               {...register("totalMarks")}
               className={`input w-full h-10 p-2 shadow-md rounded ${
@@ -274,7 +280,6 @@ const QuizForm = () => {
             <select
               className="input w-full h-10 p-2 shadow-md rounded"
               {...register("isActive")}
-              
             >
               <option value="true">Active</option>
               <option value="false">Inactive</option>

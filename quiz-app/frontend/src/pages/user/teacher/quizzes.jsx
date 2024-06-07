@@ -12,7 +12,7 @@ const Quizzes = () => {
           setToClose={setCreateModalOpen}
         />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
-          <Link to={"/quiz"}>
+          <Link to={"create-quiz"}>
             <button
               onClick={() => {
                 setCreateModalOpen(true);

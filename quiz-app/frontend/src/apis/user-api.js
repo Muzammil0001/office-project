@@ -5,7 +5,7 @@ export const createUserApi = async (data) => {
   try {
     const response = await axios.post(`${REACT_API_URL}/users`, data);
     console.log("Response:", response.data);
-    if (response.status == 201) {
+    if (response.status === 201) {
       alert("User created successfully");
     }
     return response.data;
@@ -39,7 +39,6 @@ export const getUserByIRole = async (role) => {
   } catch (error) {
     console.error("Error in getting User:", error);
     console.error("Error data announcement:", error.response.data);
-
   }
 };
 
@@ -76,5 +75,17 @@ export const updateUserApi = async (userId, data) => {
     return response;
   } catch (error) {
     console.error("Error in updating user:", error);
+  }
+};
+
+export const signinUser = async (data) => {
+  try {
+    const response = await axios.post(`${REACT_API_URL}/users/login`, data);
+    console.log("Login successfully:", response.data);
+    alert("Login successfully");
+
+    return response;
+  } catch (error) {
+    console.error("Error in Login", error);
   }
 };

@@ -1,7 +1,6 @@
 import { FaRegEdit, FaEye } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineStop } from "react-icons/ai";
-import CreateQuizModal from "./components/create-quiz";
 import { useState } from "react";
 import UpdateQuiz from "./components/update-quiz";
 import DeleteQuiz from "./components/delete-quiz";
@@ -17,10 +16,6 @@ const QuizzesList = () => {
   return (
     <>
       <div className="h-full min-h-[100vh] w-full">
-        <CreateQuizModal
-          isOpenModal={isCreateModalOpen}
-          setToClose={setCreateModalOpen}
-        />
         <UpdateQuiz
           isOpenModal={isUpdateModalOpen}
           setToClose={setUpdateModalOpen}
@@ -34,7 +29,7 @@ const QuizzesList = () => {
           setToClose={setViewModalOpen}
         />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
-          <Link to={"/quiz"}>
+          <Link to={"/admin/quizzes/create-quiz"}>
             <button
               onClick={() => {
                 setCreateModalOpen(true);
@@ -78,20 +73,6 @@ const QuizzesList = () => {
                     quizname: "Math",
                     batch: 11,
                     instructor: "Sufyan",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 2,
-                    quizname: "Computer",
-                    batch: 11,
-                    instructor: "Ahmad",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 3,
-                    quizname: "English",
-                    batch: 11,
-                    instructor: "Ali",
                     date: "22/02/2024",
                   },
                 ].map((student) => {
