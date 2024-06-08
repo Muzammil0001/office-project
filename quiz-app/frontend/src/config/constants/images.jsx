@@ -1,3 +1,4 @@
+import userPng from "../../assets/user.png";
 import bannerImage from "../../assets/banner-3.jpeg";
 import signInImage from "../../assets/signin.jpg";
 import signUpImage from "../../assets/signup.jpg";
@@ -20,4 +21,5 @@ export {
   courseImage3,
   courseImage4,
   courseImage5,
+  userPng,
 };

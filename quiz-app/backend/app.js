@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const dbConfig = require("./utils/database-connection.js");
-const userRoutes = require("./routes/user-routes.js");
+const userRoutes = require("./routes/register-routes.js");
 const quizRoutes = require("./routes/quiz-routes.js");
 const resultRoutes = require("./routes/result-routes.js");
 const discussionRoutes = require("./routes/discussion-routes.js");
@@ -10,6 +10,8 @@ const courseRoutes = require("./routes/course-routes.js");
 const assignedCourseRoutes = require("./routes/assigned-course-routes.js");
 const notificationRoutes = require("./routes/notification-routes.js");
 const enrolledcourseRoutes = require("./routes/enrolled-courses-routes.js");
+const signinRoutes = require("./routes/signin-routes");
+
 const cors = require("cors"); //For Cross Origin Resource Sharing
 const path = require("path");
 
@@ -25,6 +27,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // App Routes
 app.use(userRoutes);
+app.use(signinRoutes);
 app.use(quizRoutes);
 app.use(resultRoutes);
 app.use(discussionRoutes);

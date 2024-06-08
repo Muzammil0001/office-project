@@ -4,8 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { signupSchema } from "../../config/auth-schema/signup-schema";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { signUpImage } from "../../config/constants/images";
+import { createUserApi } from "../../apis/user-api";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigation = useNavigate();
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisibility = () => {
     setPasswordShown(!passwordShown);
@@ -20,9 +23,20 @@ const SignUp = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (data) => {
-    alert("Registered Successfully");
-    console.log("Form Data:", data);
+  const onSubmit = async (data) => {
+    try {
+      const { username, email, password } = data;
+      const signupData = {
+        username,
+        email,
+        password,
+        role: "student",
+      };
+      const response = await createUserApi(signupData);
+      navigation("/signin");
+    } catch (error) {
+      console.error("Error in creating user in signup form:", error);
+    }
   };
 
   return (

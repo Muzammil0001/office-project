@@ -30,13 +30,19 @@ const QuizForm = () => {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(quizSchema),
   });
 
+  const handleSelectedStudents = async (selectedStd) => {
+    setSelectedStudents(selectedStd);
+  };
+
   const handleCourseChange = async (courseId) => {
     setSelectedCourse(courseId);
+
     console.log("setSelectedCourse:", courseId);
     if (courseId) {
       try {
@@ -49,11 +55,6 @@ const QuizForm = () => {
     } else {
       setStudents([]);
     }
-  };
-
-  const handleStudentChange = (selectedStudentIds) => {
-    console.log("selectedStudentIds:", selectedStudentIds);
-    setSelectedStudents(selectedStudentIds.map((option) => option.value));
   };
 
   const addQuestion = () => {
@@ -159,26 +160,28 @@ const QuizForm = () => {
       setQuestions(questions.filter((question) => question.id !== questionId));
     }
   };
-
   const onSubmit = async (data) => {
     try {
+      delete data.studentId;
+      data.studentId = selectedStudents?.map((student) => student);
       if (quizType === "multipleChoice") {
         if (questions.some((question) => question.answer === "")) {
           alert("Answers must be selected for each question");
         }
       }
       data.questions = questions;
-      data.studentId = selectedStudents;
+      data.createdBy = JSON.parse(localStorage.getItem("user"))._id;
       console.log("Quiz Form Data:", data);
       if (questions.length === 0 || !selectedCourse) {
         alert(
           "Please ensure you have selected a course and added at least one question."
         );
       }
-      const response = await postQuiz(data);
-
-      console.log(questions);
-    } catch (error) {}
+      await postQuiz(data);
+      reset();
+    } catch (error) {
+      console.error("Failed to create Quiz:", error);
+    }
   };
 
   useEffect(() => {
@@ -204,7 +207,7 @@ const QuizForm = () => {
               value={selectedCourse}
               onChange={(e) => handleCourseChange(e.target.value)}
             >
-              <option value="">Select Course</option>
+              <option value=""> --Select Course-- </option>
               {courses?.map((course, idx) => (
                 <option key={idx} value={course._id}>
                   {course.courseName}
@@ -221,13 +224,14 @@ const QuizForm = () => {
             control={control}
             name="studentId"
             errors={errors}
-            selectedStudent={(selectedStudentIds) =>
-              handleStudentChange(selectedStudentIds)
-            }
+            selectedStudents={(selectedStd) => {
+              handleSelectedStudents(selectedStd);
+            }}
           />
 
           <div>
             <input
+              min={0}
               type="number"
               placeholder="Time Limit (minutes)"
               {...register("timeLimit")}
@@ -243,7 +247,7 @@ const QuizForm = () => {
           <div>
             <input
               type="number"
-              min="0"
+              min={0}
               placeholder="Total Marks"
               {...register("totalMarks")}
               className={`input w-full h-10 p-2 shadow-md rounded ${
@@ -274,7 +278,6 @@ const QuizForm = () => {
             <select
               className="input w-full h-10 p-2 shadow-md rounded"
               {...register("isActive")}
-              
             >
               <option value="true">Active</option>
               <option value="false">Inactive</option>

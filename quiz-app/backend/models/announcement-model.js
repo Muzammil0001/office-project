@@ -13,12 +13,18 @@ const announcementSchema = new Schema(
       required: [true, "Announcement description is required"],
       trim: true,
     },
-    targetRole: {
+    targetUser: {
       type: String,
-      required: [true, "Target role is required"],
-      enum: ["student", "teacher"],
-      lowercase: true,
+      enum: ["student", "teacher", "all"],
+      required: true,
     },
+    audience: [
+      {
+        type: String,
+        required: [true, "Target role is required"],
+        lowercase: true,
+      },
+    ],
   },
   { timestamps: true }
 );

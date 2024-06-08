@@ -1,133 +1,70 @@
-import React, { useState, useEffect } from "react";
-import { courseImage5 } from "../../../config/constants/images";
+import React, { useState } from "react";
 import {
   MdDashboard,
   MdSettings,
   MdAnnouncement,
   MdMenu,
-  MdClose,
 } from "react-icons/md";
 import { IoBook, IoDocumentText } from "react-icons/io5";
 import { FaUser, FaUserGraduate } from "react-icons/fa";
-import TeachersList from "./teachers";
+import { Outlet } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import Sidebar from "../../../components/sidebar";
+
 import Dashboard from "./dashboard";
-import Quizzes from "./quizzes";
-import ClassesList from "./classes";
-import Announcement from "./announcement";
-import Courses from "./courses";
-import Notify from "./notification";
-import StudentProfileSetting from "./setting";
-import StudentsList from "./students";
 
 const AdminDashboard = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [activeComponent, setActiveComponent] = useState(
-    localStorage.getItem("activeComponent") || "dashboard"
-  );
-
-  const onClickMenuHandle = (componentName) => {
-    setActiveComponent(componentName);
-    localStorage.setItem("activeComponent", componentName);
-  };
-
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setActiveComponent(
-        localStorage.getItem("activeComponent") || "dashboard"
-      );
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
 
   const menuItems = [
     {
       icon: <MdDashboard className="size-5" />,
       label: "Dashboard",
-      component: "dashboard",
+      path: "/admin/dashboard",
     },
     {
       icon: <FaUser className="size-5" />,
       label: "Teachers",
-      component: "teacherslist",
+      path: "/admin/teachers",
     },
     {
       icon: <FaUserGraduate className="size-5" />,
       label: "Students",
-      component: "students",
+      path: "/admin/students",
     },
     {
       icon: <IoBook className="size-5" />,
       label: "Courses",
-      component: "courses",
+      path: "/admin/courses",
     },
     {
       icon: <IoDocumentText className="size-5" />,
       label: "Quizzes",
-      component: "quiz",
+      path: "/admin/quizzes",
     },
     {
       icon: <MdAnnouncement className="size-5" />,
       label: "Announcement",
-      component: "announcement",
+      path: "/admin/announcements",
     },
     {
       icon: <MdSettings className="size-5" />,
       label: "Settings",
-      component: "setting",
+      path: "/admin/profile",
     },
   ];
   return (
     <div className="bg-gray-100 h-full min-h-[100vh] w-full">
-      <div
-        className={`bg-white w-64 p-5 fixed inset-y-0 left-0 transform ${
-          isSidebarOpen ? "translate-x-0 z-50" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:translate-x-0`}
-      >
-        <div className="flex justify-between items-center">
-          <MdClose
-            className="lg:hidden cursor-pointer"
-            size="24"
-            onClick={toggleSidebar}
-          />
-        </div>
-        <div className="mt-4">
-          <div className="mb-5 flex flex-col justify-center items-center">
-            <img
-              className="rounded-full size-14 lg:size-20"
-              src={courseImage5}
-              alt="profile"
-            />
-            <div className="mt-2 text-center">
-              <p className="text-lg font-medium text-gray-700">Ali</p>
-              <div className="w-32 h-8 py-1 px-3 bg-gray-700 text-white rounded-full flex justify-center items-center">
-                Admin
-              </div>
-            </div>
-          </div>
-          <div>
-            {/* Generate menu items with icons */}
-            {menuItems.map((item, index) => (
-              <li
-                key={index}
-                className="listStyle cursor-pointer"
-                onClick={() => onClickMenuHandle(item.component)}
-              >
-                {item.icon}
-                <span className="ml-2">{item.label}</span>
-              </li>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Sidebar
+        menuItems={menuItems}
+        isSidebarOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+      />
 
       <div className="flex-1 flex flex-col min-h-screen">
         <nav className="w-full bg-white shadow py-4 px-4 flex justify-between items-center">
@@ -144,15 +81,11 @@ const AdminDashboard = () => {
           </button>
         </nav>
         <main className="flex p-4 ms-0 lg:ml-64">
-          {activeComponent === "dashboard" && <Dashboard />}
-          {activeComponent === "quiz" && <Quizzes />}
-          {activeComponent === "students" && <StudentsList />}
-          {activeComponent === "classes" && <ClassesList />}
-          {activeComponent === "teacherslist" && <TeachersList />}
-          {activeComponent === "announcement" && <Announcement />}
-          {activeComponent === "courses" && <Courses />}
-          {activeComponent === "notify" && <Notify />}
-          {activeComponent === "setting" && <StudentProfileSetting />}
+          {currentPath == "/admin/" || currentPath == "/admin" ? (
+            <StudentDashboard />
+          ) : (
+            <Outlet />
+          )}
         </main>
       </div>
     </div>

@@ -1,26 +1,30 @@
 import { FaRegEdit, FaEye } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineStop } from "react-icons/ai";
-import CreateQuizModal from "./components/create-quiz";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UpdateQuiz from "./components/update-quiz";
 import DeleteQuiz from "./components/delete-quiz";
 import ViewQuizDetails from "./components/view-quiz";
 import { Link } from "react-router-dom";
+import { getQuizzes } from "../../../apis/quizzes-apis";
 
 const QuizzesList = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [quizzes, setQuizzes] = useState([]);
 
+  useEffect(() => {
+    const getQuiz = async () => {
+      const response = await getQuizzes();
+      setQuizzes(response.data);
+    };
+    getQuiz();
+  }, []);
   return (
     <>
       <div className="h-full min-h-[100vh] w-full">
-        <CreateQuizModal
-          isOpenModal={isCreateModalOpen}
-          setToClose={setCreateModalOpen}
-        />
         <UpdateQuiz
           isOpenModal={isUpdateModalOpen}
           setToClose={setUpdateModalOpen}
@@ -34,12 +38,12 @@ const QuizzesList = () => {
           setToClose={setViewModalOpen}
         />
         <div className="w-full flex md:flex-row flex-col items-center justify-end px-4">
-          <Link to={"/quiz"}>
+          <Link to={"/create-quiz"}>
             <button
               onClick={() => {
                 setCreateModalOpen(true);
               }}
-              className="py-2 px-4 bg-blue-800 rounded-sm text-white"
+              className="py-2 px-4  bg-gradient-to-tr from-blue-950 to-blue-500  rounded-sm text-white"
             >
               Create Quiz
             </button>
@@ -55,16 +59,13 @@ const QuizzesList = () => {
                 <tr className="text-center bg-blue-950 text-white h-12">
                   <th className="p-2  font-medium border border-gray-400">#</th>
                   <th className="p-2  font-medium border border-gray-400">
-                    Name
+                    Quiz Name
                   </th>
                   <th className="p-2 md:table-cell hidden  font-medium border border-gray-400">
-                    Batch
+                    Course
                   </th>
                   <th className="p-2 md:table-cell hidden font-medium border border-gray-400">
-                    Instructor
-                  </th>
-                  <th className="p-2 md:table-cell hidden  font-medium border border-gray-400">
-                    Date
+                    Status
                   </th>
                   <th className="p-2  font-medium border border-gray-400">
                     Action
@@ -72,43 +73,25 @@ const QuizzesList = () => {
                 </tr>
               </thead>
               <tbody>
-                {[
-                  {
-                    id: 1,
-                    quizname: "Math",
-                    batch: 11,
-                    instructor: "Sufyan",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 2,
-                    quizname: "Computer",
-                    batch: 11,
-                    instructor: "Ahmad",
-                    date: "22/02/2024",
-                  },
-                  {
-                    id: 3,
-                    quizname: "English",
-                    batch: 11,
-                    instructor: "Ali",
-                    date: "22/02/2024",
-                  },
-                ].map((student) => {
-                  const { id, quizname, batch, instructor, date } = student;
+                {quizzes?.map((quiz, index) => {
+                  const { _id, courseId, quizTitle, isActive } = quiz;
                   return (
-                    <tr key={id} className="text-center hover:bg-gray-100 h-12">
-                      <td className="p-2 border border-gray-300">{id}</td>
-                      <td className="p-2 border border-gray-300">{quizname}</td>
+                    <tr
+                      key={_id}
+                      className="text-center hover:bg-gray-100 h-12"
+                    >
+                      <td className="p-2 border border-gray-300">
+                        {index + 1}
+                      </td>
+                      <td className="p-2 border border-gray-300">
+                        {quizTitle}
+                      </td>
                       <td className="p-2 md:table-cell hidden  border border-gray-300">
-                        {batch}
+                        {courseId.courseName}
                       </td>
 
                       <td className="p-2 md:table-cell hidden border border-gray-300">
-                        {instructor}
-                      </td>
-                      <td className="p-2 md:table-cell hidden  border border-gray-300">
-                        {date}
+                        {isActive ? "Active" : "Inactive"}
                       </td>
                       <td className="p-2 border border-gray-300 ">
                         <div className="flex gap-5 p-2 justify-center">
@@ -118,7 +101,6 @@ const QuizzesList = () => {
                             }}
                             className="size-5 cursor-pointer text-blue-500"
                           />
-                          <AiOutlineStop className="size-5 cursor-pointer text-red-500" />
                           <FaRegEdit
                             onClick={() => {
                               setUpdateModalOpen(true);

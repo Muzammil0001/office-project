@@ -9,6 +9,54 @@ export const postQuiz = async (data) => {
       return response;
     }
   } catch (error) {
-    console.error("Error in creating course:", error);
+    console.error("Error in creating quiz:", error);
+  }
+};
+
+export const getQuizzes = async () => {
+  try {
+    const response = await axios.get(`${REACT_API_URL}/quizzes`);
+    if (response.status == 200) {
+      console.log("Quiz Fetched:", response.data);
+      return response;
+    }
+  } catch (error) {
+    console.error("Error in fetching quizzes:", error);
+  }
+};
+
+export const getQuizById = async (id) => {
+  try {
+    const response = await axios.delete(`${REACT_API_URL}/quizzes/{id}`);
+    if (response.status == 200) {
+      console.log("Quiz Fetched:", response.data);
+      return response;
+    }
+  } catch (error) {
+    console.error("Error in fetching quiz:", error);
+  }
+};
+
+export const updateQuiz = async (id) => {
+  try {
+    const response = await axios.get(`${REACT_API_URL}/quizzes/{id}`);
+    if (response.status == 200) {
+      console.log("Quiz Fetched:", response.data);
+      return response;
+    }
+  } catch (error) {
+    console.error("Error in fetching quiz:", error);
+  }
+};
+
+export const ViewQuiz = async (id) => {
+  try {
+    const response = await axios.get(`${REACT_API_URL}/quizzes/{id}`);
+    if (response.status == 200) {
+      console.log("Quiz Fetched:", response.data);
+      return response;
+    }
+  } catch (error) {
+    console.error("Error in fetching quiz:", error);
   }
 };
