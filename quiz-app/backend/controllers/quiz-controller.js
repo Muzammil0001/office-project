@@ -85,3 +85,23 @@ exports.deleteQuiz = async (req, res) => {
       .send({ message: "Failed to delete quiz", error: error.message });
   }
 };
+
+
+
+exports.getQuizzesByUserId = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const quizzes = await Quiz.find({ studentId: userId })
+      .populate("createdBy", "username email") 
+      .populate("courseId", "courseName"); 
+
+    if (!quizzes.length) {
+      return res.status(404).json({ message: "No quizzes found for this user." });
+    }
+
+    res.status(200).json(quizzes);
+  } catch (error) {
+    res.status(500).json({ error: "Server error while fetching quizzes." });
+  }
+};

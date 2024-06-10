@@ -10,19 +10,18 @@ const SignIn = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
 
   const onSubmit = async (data) => {
-    console.log("data:", data);
+   try{
     const response = await signinUser(data);
-    console.log("Signin Response:"), response.data;
+  if(response.status==201){
     localStorage.setItem("token", JSON.stringify(response.data.token));
     localStorage.setItem("user", JSON.stringify(response.data.user));
-    reset();
+
 
     switch (response.data.user.role) {
       case "admin":
@@ -30,7 +29,7 @@ const SignIn = () => {
 
         break;
       case "student":
-        navigation("/student/dashboard");
+        navigation("/students/dashboard");
         break;
       case "teacher":
         navigation("/teacher/dashboard");
@@ -38,6 +37,11 @@ const SignIn = () => {
       default:
         throw new Error("Unauthorized role");
     }
+  }
+   }
+   catch(error){
+    console.log("Failed to login", error)
+   }
   };
 
   return (

@@ -35,6 +35,8 @@ const Chat = () => {
           targetUser: role,
         };
         const response = await postAnnouncement(announcement);
+        setTitle("")
+        setDescription("")
         console.log("Announcement response:", response);
       } else {
         const getUsers = await getUserByIRole(role);
@@ -46,6 +48,8 @@ const Chat = () => {
           targetUser: role,
         };
         await postAnnouncement(announcement);
+        setTitle("")
+        setDescription("")
       }
     } catch (error) {
       console.error("Failed to create announcement", error);
@@ -60,6 +64,7 @@ const Chat = () => {
     const getAnnouncementsFunc = async () => {
       const response = await getAnnouncements();
       setAnnouncements(response.data);
+      
     };
     getAnnouncementsFunc();
   }, []);
@@ -84,9 +89,9 @@ const Chat = () => {
                 setRole(event.target.value);
               }}
             >
-              <option value="teacher">Teacher</option>
-              <option value="student">Student</option>
-              <option value="all">Both</option>
+              <option value="teacher">Teachers</option>
+              <option value="student">Students</option>
+              <option value="all">All</option>
             </select>
           </div>
 
@@ -131,7 +136,8 @@ const Chat = () => {
             className="h-80 overflow-y-auto mb-4 p-3 bg-gray-50 rounded"
             style={{ position: "relative" }}
           >
-            {announcement.map((msg) => (
+            {
+              announcement.map((msg) =>{return (
               <div key={msg._id} className="bg-white p-3 rounded mb-2 shadow">
                 <div className="flex justify-end items-center gap-2">
                   <RxCross2
@@ -157,7 +163,7 @@ const Chat = () => {
                   {msg.description}
                 </p>
               </div>
-            ))}
+            )})}
             <div ref={chatEndRef} />
           </div>
         </div>

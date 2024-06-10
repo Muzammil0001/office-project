@@ -8,6 +8,12 @@ const notifySchema = Schema(
       type: String,
       required: true,
     },
+    status:{
+      type:String,
+      enum:["read", "unread"],
+      default:"unread",
+      required:true,
+    },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

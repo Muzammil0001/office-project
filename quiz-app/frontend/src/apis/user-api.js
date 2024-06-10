@@ -7,10 +7,11 @@ export const createUserApi = async (data) => {
     console.log("Response:", response.data);
     if (response.status === 201) {
       alert("User created successfully");
+      return response.data;
     }
-    return response.data;
   } catch (error) {
     console.error("Error in creating user:", error);
+    console.error("Error in creating user:", error.response.headers);
   }
 };
 
@@ -81,11 +82,13 @@ export const updateUserApi = async (userId, data) => {
 export const signinUser = async (data) => {
   try {
     const response = await axios.post(`${REACT_API_URL}/users/login`, data);
-    console.log("Login successfully:", response.data);
-    alert("Login successfully");
-
-    return response;
+    if (response.status === 201) {
+      console.log("Login successfully:", response.data);
+      return response;
+    }
   } catch (error) {
-    console.error("Error in Login", error);
+    console.error("Error during login:", error);
+    alert("username or password is invalid");
+    return null;
   }
 };

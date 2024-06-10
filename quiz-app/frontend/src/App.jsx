@@ -26,6 +26,7 @@ import Courses from "./pages/user/student/courses";
 import StudentProfileSetting from "./pages/user/student/setting";
 import StudentNotify from "./pages/user/student/notification";
 import StudentChat from "./pages/user/student/chat";
+import Quiz from "./components/quiz";
 
 const App = () => {
   const isAuthenticated = localStorage.getItem("token") !== null;
@@ -36,6 +37,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route

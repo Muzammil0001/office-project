@@ -8,13 +8,13 @@ import {
 import { IoBook, IoDocumentText } from "react-icons/io5";
 import { FaUser, FaUserGraduate } from "react-icons/fa";
 import { Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../../../components/sidebar";
-
 import Dashboard from "./dashboard";
 
 const AdminDashboard = () => {
   const location = useLocation();
+  const navigation=useNavigate();
   const currentPath = location.pathname;
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => {
@@ -58,6 +58,12 @@ const AdminDashboard = () => {
       path: "/admin/profile",
     },
   ];
+
+ const onClickHandle =()=>{
+localStorage.removeItem("user");
+localStorage.removeItem("token");
+navigation("/signin")
+ }
   return (
     <div className="bg-gray-100 h-full min-h-[100vh] w-full">
       <Sidebar
@@ -76,7 +82,7 @@ const AdminDashboard = () => {
               <MdMenu size="24" />
             </button>
           </div>
-          <button className="cursor-pointer text-black font-normal py-2 px-4 rounded">
+          <button onClick={onClickHandle} className="cursor-pointer text-black font-normal py-2 px-4 rounded">
             Logout
           </button>
         </nav>

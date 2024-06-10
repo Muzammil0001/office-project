@@ -1,4 +1,4 @@
-const EnrolledCourse = require("../models/enrolled-courses-js");
+const EnrolledCourse = require("../models/enrolled-courses.js");
 
 // Create an enrollment
 exports.createEnrollment = async (req, res) => {
@@ -122,5 +122,25 @@ exports.deleteEnrollment = async (req, res) => {
     res
       .status(500)
       .send({ message: "Failed to delete enrollment", error: error.message });
+  }
+};
+
+
+
+exports.getCoursesByStudentId = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+
+    const enrolledCourses = await EnrolledCourse.find({ studentId })
+      .populate('studentId', 'username email userAvatar')
+      .populate('courseId', '_id courseName description courseImage');
+
+    if (!enrolledCourses) {
+      return res.status(404).send({ error: 'No courses found for this student' });
+    }
+
+    res.status(200).send(enrolledCourses);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 const Sidebar = ({ menuItems, isSidebarOpen, toggleSidebar }) => {
   const user = JSON.parse(localStorage.getItem("user")) || null;
   const { username, role, email, userAvatar } = user;
+  const imageUrl = `http://localhost:5000/${user.userAvatar.replace('../', '')}`;
   return (
     <>
       <div
@@ -26,7 +27,7 @@ const Sidebar = ({ menuItems, isSidebarOpen, toggleSidebar }) => {
           <div className="mb-5 flex flex-col justify-center items-center">
             <img
               className="rounded-full w-14 lg:w-20"
-              src={userAvatar || userPng}
+              src={imageUrl || userPng}
               alt="profile"
             />
             <div className="mt-2 text-center">

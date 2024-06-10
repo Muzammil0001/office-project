@@ -8,6 +8,7 @@ router.get(
   "/enrollments/students/",
   enrolledCourseController.getStudentsByCourseId
 );
+router.get('/courses/enrollments/:studentId', enrolledCourseController.getCoursesByStudentId);
 router.get("/enrollments/:id", enrolledCourseController.getEnrollmentById);
 router.patch("/enrollments/:id", enrolledCourseController.updateEnrollment);
 router.delete("/enrollments/:id", enrolledCourseController.deleteEnrollment);
