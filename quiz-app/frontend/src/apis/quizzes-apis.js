@@ -6,7 +6,7 @@ export const postQuiz = async (data) => {
     const response = await axios.post(`${REACT_API_URL}/quizzes`, data);
     if (response.status == 201) {
       console.log("Quiz Created:", response.data);
-      alert("Quiz Created Successfully")
+      alert("Quiz Created Successfully");
       return response;
     }
   } catch (error) {
@@ -31,29 +31,28 @@ export const getQuizById = async (id) => {
     const response = await axios.get(`${REACT_API_URL}/quizzes/${id}`);
     if (response.status === 200) {
       console.log("Quiz Fetched:", response.data);
-      return response.data; // Ensure returning the data directly
+      return response.data;
     }
   } catch (error) {
     console.error("Error in fetching quiz:", error);
-    throw error; // Re-throw error for handling in the component
   }
 };
 
-export const updateQuiz = async (id) => {
+export const updateQuiz = async (id, data) => {
   try {
-    const response = await axios.get(`${REACT_API_URL}/quizzes/{id}`);
+    const response = await axios.patch(`${REACT_API_URL}/quizzes/${id}`, data);
     if (response.status == 200) {
-      console.log("Quiz Fetched:", response.data);
+      console.log("Quiz Updated:", response.data);
       return response;
     }
   } catch (error) {
-    console.error("Error in fetching quiz:", error);
+    console.error("Error in updating quiz:", error);
   }
 };
 
 export const ViewQuiz = async (id) => {
   try {
-    const response = await axios.get(`${REACT_API_URL}/quizzes/{id}`);
+    const response = await axios.get(`${REACT_API_URL}/quizzes/${id}`);
     if (response.status == 200) {
       console.log("Quiz Fetched:", response.data);
       return response;
@@ -62,7 +61,6 @@ export const ViewQuiz = async (id) => {
     console.error("Error in fetching quiz:", error);
   }
 };
-
 
 export const getQuizByStdId = async (id) => {
   try {
@@ -74,4 +72,4 @@ export const getQuizByStdId = async (id) => {
   } catch (error) {
     console.error("Error in fetching quiz:", error);
   }
-}
+};

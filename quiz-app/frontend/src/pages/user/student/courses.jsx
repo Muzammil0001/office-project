@@ -5,7 +5,7 @@ import EnrolledCourses from "./components/enrolled-courses";
 const Courses = () => {
   return (
     <>
-      <div className="w-full">
+      <div className="w-full h-[max-content]">
       <EnrolledCourses/>
       <AvailableCourses/>
       </div>

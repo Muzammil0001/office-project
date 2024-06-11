@@ -1,23 +1,17 @@
 const Discussion = require("../models/discussion-model");
-
+const User = require("../models/user-model");
 // Create Discussion
 exports.createDiscussion = async (req, res) => {
   const { message, senderId, receiverId } = req.body;
 
   try {
-    // Ensure both sender and receiver exist
     const senderExists = await User.findById(senderId);
-    const receiverExists = await User.findById(receiverId);
 
-    if (!senderExists || !receiverExists) {
+    if (!senderExists) {
       return res.status(404).send({ message: "Sender or receiver not found" });
     }
 
-    const newDiscussion = new Discussion({
-      message,
-      senderId,
-      receiverId,
-    });
+    const newDiscussion = new Discussion(req.body);
 
     await newDiscussion.save();
     res.status(201).send({

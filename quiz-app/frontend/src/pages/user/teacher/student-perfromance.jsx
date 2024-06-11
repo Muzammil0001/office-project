@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ViewStudentDetails from "./components/student-details";
+import ViewStudentDetails from "../user-components/student-details";
 
-const LeaderBoard = () => {
+const TeacherLeaderBoard = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   return (
     <>
@@ -90,4 +90,4 @@ const LeaderBoard = () => {
   );
 };
 
-export default LeaderBoard;
+export default TeacherLeaderBoard;

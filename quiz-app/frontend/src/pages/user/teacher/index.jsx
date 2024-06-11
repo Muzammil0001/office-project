@@ -9,9 +9,13 @@ import { IoBook, IoDocumentText, IoChatboxEllipses } from "react-icons/io5";
 import { ImBooks } from "react-icons/im";
 import { BsGraphUpArrow } from "react-icons/bs";
 import Sidebar from "../../../components/sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import TeacherDashboard from "./dashboard";
 
-const TeacherDashboard = () => {
+const TeacherMain = () => {
+  const location = useLocation();
+  const navigation = useNavigate();
+  const currentPath = location.pathname;
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -27,39 +31,45 @@ const TeacherDashboard = () => {
     {
       icon: <BsGraphUpArrow className="size-5" />,
       label: "Student Performance",
-      path: "/teacher/dashboard",
+      path: "/teacher/performance",
     },
     {
       icon: <IoBook className="size-5" />,
       label: "Courses",
-      path: "/teacher/dashboard",
+      path: "/teacher/courses",
     },
     {
       icon: <IoDocumentText className="size-5" />,
       label: "Quizzes",
-      path: "/teacher/dashboard",
+      path: "/teacher/quizzes",
     },
     {
       icon: <ImBooks className="size-5" />,
       label: "Study Material",
-      path: "/teacher/dashboard",
+      path: "/teacher/study-material",
     },
     {
       icon: <IoChatboxEllipses className="size-5" />,
       label: "Chat",
-      path: "/teacher/dashboard",
+      path: "/teacher/chat",
     },
     {
       icon: <MdNotifications className="size-5" />,
       label: "Notifications",
-      path: "/teacher/dashboard",
+      path: "/teacher/notifications",
     },
     {
       icon: <MdSettings className="size-5" />,
       label: "Settings",
-      path: "/teacher/dashboard",
+      path: "/teacher/profile",
     },
   ];
+
+  const onClickHandle = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigation("/signin");
+  };
   return (
     <div className="bg-gray-100 h-full min-h-[100vh] w-full">
       <Sidebar
@@ -78,16 +88,23 @@ const TeacherDashboard = () => {
               <MdMenu size="24" />
             </button>
           </div>
-          <button className="cursor-pointer text-black font-normal py-2 px-4 rounded">
+          <button
+            onClick={onClickHandle}
+            className="cursor-pointer text-black font-normal py-2 px-4 rounded"
+          >
             Logout
           </button>
         </nav>
         <main className="flex p-4 ms-0 lg:ml-64">
-          <Outlet />
+          {currentPath == "/teacher/" || currentPath == "/teacher" ? (
+            <TeacherDashboard />
+          ) : (
+            <Outlet />
+          )}
         </main>
       </div>
     </div>
   );
 };
 
-export default TeacherDashboard;
+export default TeacherMain;

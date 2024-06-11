@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getQuizById } from "../apis/quizzes-apis";
+import { getQuizById } from "../../../apis/quizzes-apis";
 
-const Quiz = () => {
+const QuizPage = () => {
   const { id } = useParams();
   const [quizData, setQuizData] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -74,7 +74,9 @@ const Quiz = () => {
       </div>
 
       <div>
-        <h3 className="text-lg mb-3 mt-5 sm:mt-10">{currentQuestion.questionText}</h3>
+        <h3 className="text-lg mb-3 mt-5 sm:mt-10">
+          {currentQuestion.questionText}
+        </h3>
         {currentQuestion.options.map((option) => (
           <div key={option._id} className="mb-2">
             <div className="flex items-center space-x-2">
@@ -129,4 +131,4 @@ const Quiz = () => {
   );
 };
 
-export default Quiz;
+export default QuizPage

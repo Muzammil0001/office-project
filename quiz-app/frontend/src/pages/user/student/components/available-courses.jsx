@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { getEnrolledCourses } from "../../../../apis/enrolled-courses";
+import {
+  createEnrollment,
+  getEnrolledCourses,
+} from "../../../../apis/enrolled-courses";
 import { getCoursesApi } from "../../../../apis/course-apis";
+import { updateUserApi } from "../../../../apis/user-api";
 
 const AvailableCourses = () => {
   const [avaiableCourses, setAvailableCourses] = useState(null);
@@ -30,6 +34,14 @@ const AvailableCourses = () => {
 
     fetchCourses();
   }, []);
+
+  const onClickHandle = async (courseId) => {
+    const studentId = JSON.parse(localStorage.getItem("user"))._id;
+    const userResponse = await updateUserApi(studentId, courseId);
+    const enrolledResponse = await createEnrollment({ courseId, studentId });
+    console.log("enrolledResponse:", enrolledResponse);
+    console.log("userResponse:", userResponse);
+  };
   return (
     <>
       <div>
@@ -37,16 +49,19 @@ const AvailableCourses = () => {
           Available Courses
         </h1>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center justify-center gap-5 flex-wrap">
           {avaiableCourses ? (
             avaiableCourses.map((course, idx) => {
-              const { courseImage, courseName, description } = course;
+              const { _id, courseImage, courseName, description } = course;
               const courseImg = `http://localhost:5000/${courseImage.replace(
                 "../",
                 ""
               )}`;
               return (
-                <div key={idx} className="hover:mt-[-5px] duration-300 cursor-pointer w-[300px] h-[400px] shadow-md shadow-gray-300 bg-white rounded-[20px]">
+                <div
+                  key={idx}
+                  className="hover:mt-[-5px] duration-300 cursor-pointer w-[300px] h-[400px] shadow-md shadow-gray-300 bg-white rounded-[20px]"
+                >
                   <div>
                     <img
                       className="h-[200px] w-[300px] object-fit rounded-tl-[20px] rounded-tr-[20px]"
@@ -56,11 +71,19 @@ const AvailableCourses = () => {
                   </div>
                   <div className="px-5 py-3">
                     <h3 className="heading3">{courseName}</h3>
-                    <p className="text-center py-2">
-                     {description}
+                    <p className="text-center py-2 line-clamp-1">
+                      {description}
                     </p>
 
-                   <div className="flex justify-center"> <button className="btn">Enrolled Now</button></div>
+                    <div className="flex justify-center">
+                      {" "}
+                      <button
+                        className="btn"
+                        onClick={() => onClickHandle(_id)}
+                      >
+                        Enrolled Now
+                      </button>
+                    </div>
                   </div>
                 </div>
               );

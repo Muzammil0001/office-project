@@ -14,7 +14,7 @@ import Dashboard from "./dashboard";
 
 const AdminDashboard = () => {
   const location = useLocation();
-  const navigation=useNavigate();
+  const navigation = useNavigate();
   const currentPath = location.pathname;
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => {
@@ -59,11 +59,11 @@ const AdminDashboard = () => {
     },
   ];
 
- const onClickHandle =()=>{
-localStorage.removeItem("user");
-localStorage.removeItem("token");
-navigation("/signin")
- }
+  const onClickHandle = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigation("/signin");
+  };
   return (
     <div className="bg-gray-100 h-full min-h-[100vh] w-full">
       <Sidebar
@@ -82,13 +82,16 @@ navigation("/signin")
               <MdMenu size="24" />
             </button>
           </div>
-          <button onClick={onClickHandle} className="cursor-pointer text-black font-normal py-2 px-4 rounded">
+          <button
+            onClick={onClickHandle}
+            className="cursor-pointer text-black font-normal py-2 px-4 rounded"
+          >
             Logout
           </button>
         </nav>
         <main className="flex p-4 ms-0 lg:ml-64">
           {currentPath == "/admin/" || currentPath == "/admin" ? (
-            <StudentDashboard />
+            <Dashboard />
           ) : (
             <Outlet />
           )}

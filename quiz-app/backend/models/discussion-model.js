@@ -16,7 +16,6 @@ const discussionSchema = new Schema(
     receiverId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
   },
   { timestamps: true }

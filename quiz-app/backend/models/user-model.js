@@ -36,10 +36,12 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Registration Password Required"],
     },
-    courseId: {
-      type: Schema.Types.ObjectId,
-      ref: "Course",
-    },
+    courseId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
     tokens: [
       {
         token: {
@@ -66,7 +68,7 @@ userSchema.methods.authTokenGenerator = async function () {
   const newToken = jwt.sign(
     { _id: this._id.toString() },
     process.env.JWT_SECRET,
-    { expiresIn: "5s" }
+    { expiresIn: "5h" }
   );
   this.tokens = this.tokens.concat({ token: newToken });
   await this.save();

@@ -8,7 +8,10 @@ export const postCourseApi = async (data) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("Response:", response.data);
+    if (response.status == 201) {
+      console.log("Response:", response.data);
+      return response;
+    }
   } catch (error) {
     console.error("Error in creating course:", error);
   }
