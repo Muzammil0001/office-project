@@ -8,8 +8,7 @@ import {
 import { PiTrophyFill } from "react-icons/pi";
 import { IoBook, IoDocumentText, IoChatboxEllipses } from "react-icons/io5";
 import { ImBooks } from "react-icons/im";
-import { Outlet } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router-dom";
+import {Outlet , useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../../../components/sidebar";
 import StudentDashboard from "./dashboard";
 

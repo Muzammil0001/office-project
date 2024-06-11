@@ -1,30 +1,6 @@
 const Course = require("../models/course-model");
 
-// Get all courses
-exports.getAllCourses = async (req, res) => {
-  try {
-    const courses = await Course.find();
-    res.status(200).send(courses);
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-// Get a single course by id
-exports.getCourseById = async (req, res) => {
-  try {
-    const course = await Course.findById(req.params.id);
-    if (course) {
-      res.status(200).send(course);
-    } else {
-      res.status(404).send({ message: "Course not found" });
-    }
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};
-
-// Create a new course
+////////////////// Create course
 exports.createCourse = async (req, res) => {
   try {
     if (!req.file) {
@@ -47,7 +23,31 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-// Update a course
+////////////////// Get all courses
+exports.getAllCourses = async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.status(200).send(courses);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+////////////////// Get a single course by id
+exports.getCourseById = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+    if (course) {
+      res.status(200).send(course);
+    } else {
+      res.status(404).send({ message: "Course not found" });
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+////////////////// Update a course
 exports.updateCourse = async (req, res) => {
   try {
     const updateData = {
@@ -70,7 +70,7 @@ exports.updateCourse = async (req, res) => {
   }
 };
 
-// Get a single course by Roles<=====================>
+////////////////// Get a single course by Roles<=====================>
 exports.getCourseCount = async (req, res) => {
   try {
     const count = await Course.countDocuments();
@@ -83,7 +83,7 @@ exports.getCourseCount = async (req, res) => {
   }
 };
 
-// Delete a course
+////////////////// Delete a course
 exports.deleteCourse = async (req, res) => {
   try {
     const course = await Course.findByIdAndDelete(req.params.id);

@@ -1,8 +1,8 @@
 import { courseImage5 } from "../../../config/constants/images";
 import { useState } from "react";
-import AddStudyMaterial from "./components/add-study-material";
+import AddStudyMaterial from "../user-components/add-study-material";
 
-const StudyMaterial = () => {
+const TeacherStudyMaterial = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   return (
     <>
@@ -11,12 +11,12 @@ const StudyMaterial = () => {
           isOpenModal={isAddModalOpen}
           setToClose={setAddModalOpen}
         />
-        <div className="w-full flex md:flex-row flex-col items-center justify-end px-4 my-4">
+        <div className="w-full flex sm:flex-row flex-col items-end sm:items-center justify-end px-4">
           <button
             onClick={() => {
               setAddModalOpen(true);
             }}
-            className="py-2 px-4 bg-blue-800 rounded-sm text-white"
+            className="py-2 px-4 bg-gradient-to-tr from-blue-900 to-blue-500 rounded-sm text-white"
           >
             Add Material
           </button>
@@ -59,4 +59,4 @@ const StudyMaterial = () => {
   );
 };
 
-export default StudyMaterial;
+export default TeacherStudyMaterial;

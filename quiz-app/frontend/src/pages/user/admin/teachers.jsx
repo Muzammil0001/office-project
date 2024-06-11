@@ -87,51 +87,50 @@ const TeachersList = () => {
                 </tr>
               </thead>
               <tbody>
-              {teacherData?.map((teacher, index) => {
-                const { _id, username, email, courseId } = teacher;
-                return (
-                  <tr
-                    key={index}
-                    className="text-center hover:bg-gray-100 h-12"
-                  >
-                    <td className="p-2 border border-gray-300">
-                      {index + 1}
-                    </td>
-                    <td className="p-2 border border-gray-300">{username}</td>
-                    <td className="p-2 border sm:table-cell hidden border-gray-300">
-                      {email}
-                    </td>
-                    <td className="p-2 border border-gray-300">
-                      {courseId?.courseName || "N/A"}
-                    </td>
-                    <td className="p-2 border border-gray-300 ">
-                      <div className="flex gap-5 p-2 justify-center">
-                        <div className="flex gap-5 px-2 justify-center">
-                          <FaEye
-                            onClick={() => {
-                              handleIconClick(_id, setViewModalOpen);
-                            }}
-                            className="size-5 cursor-pointer text-blue-500"
-                          />
-                          <FaRegEdit
-                            onClick={() => {
-                              handleIconClick(_id, setUpdateModalOpen);
-                            }}
-                            className="size-5 cursor-pointer text-green-800"
-                          />
-                          <RiDeleteBin6Line
-                            onClick={() => {
-                              handleIconClick(_id, setDeleteModalOpen);
-                            }}
-                            className="size-5 cursor-pointer text-red-500"
-                          />
+                {teacherData?.map((teacher, index) => {
+                  const { _id, username, email, courseId } = teacher;
+                  return (
+                    <tr
+                      key={index}
+                      className="text-center hover:bg-gray-100 h-12"
+                    >
+                      <td className="p-2 border border-gray-300">
+                        {index + 1}
+                      </td>
+                      <td className="p-2 border border-gray-300">{username}</td>
+                      <td className="p-2 border sm:table-cell hidden border-gray-300">
+                        {email}
+                      </td>
+                      <td className="p-2 border border-gray-300">
+                        {courseId?.courseName || "N/A"}
+                      </td>
+                      <td className="p-2 border border-gray-300 ">
+                        <div className="flex gap-5 p-2 justify-center">
+                          <div className="flex gap-5 px-2 justify-center">
+                            <FaEye
+                              onClick={() => {
+                                handleIconClick(_id, setViewModalOpen);
+                              }}
+                              className="size-5 cursor-pointer text-blue-500"
+                            />
+                            <FaRegEdit
+                              onClick={() => {
+                                handleIconClick(_id, setUpdateModalOpen);
+                              }}
+                              className="size-5 cursor-pointer text-green-800"
+                            />
+                            <RiDeleteBin6Line
+                              onClick={() => {
+                                handleIconClick(_id, setDeleteModalOpen);
+                              }}
+                              className="size-5 cursor-pointer text-red-500"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-              
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             {loader && (

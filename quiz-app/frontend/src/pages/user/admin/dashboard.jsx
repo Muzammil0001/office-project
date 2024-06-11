@@ -4,7 +4,7 @@ import HighchartsContainer from "../user-components/charts";
 import { countUserByIRole } from "../../../apis/user-api";
 import { countCourse } from "../../../apis/course-apis";
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   const [dataCount, setDataCount] = useState([]);
   const options = {
     chart: {
@@ -54,4 +54,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

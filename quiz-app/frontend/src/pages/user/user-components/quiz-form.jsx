@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getCoursesApi } from "../apis/course-apis";
-import { getStudentsByCourse } from "../apis/enrolled-courses";
+import { getCoursesApi } from "../../../apis/course-apis";
 import QuizQuestion from "./quiz-questions";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import quizSchema from "../config/auth-schema/quiz-form-schema";
 import MultiSelectInput from "./multiselect";
-import { postQuiz } from "../apis/quizzes-apis";
+import quizSchema from "../../../config/auth-schema/quiz-form-schema";
+import { getStudentsByCourse } from "../../../apis/enrolled-courses";
+import { postQuiz } from "../../../apis//quizzes-apis";
 
 const QuizForm = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role;
+  const courseId = user?.courseId;
+
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -184,11 +188,22 @@ const QuizForm = () => {
     }
   };
 
-  useEffect(() => {
-    const getCourseFunc = async () => {
-      const response = await getCoursesApi();
+  const getCourseFunc = async () => {
+    const response = await getCoursesApi();
+
+    console.log("courses all", response);
+    if (role === "teacher") {
+      const TeacherCourses = response?.filter(
+        (course) => course._id === courseId
+      );
+      setCourses(TeacherCourses);
+      console.log("courses teacher", TeacherCourses);
+    } else if (role === "admin") {
       setCourses(response);
-    };
+      console.log("courses all", response);
+    }
+  };
+  useEffect(() => {
     getCourseFunc();
   }, []);
 
@@ -304,8 +319,8 @@ const QuizForm = () => {
             name="questionType"
             className="input w-full col-span-12 order-1 sm:order-2 sm:col-span-3 h-10 p-2 shadow-md rounded"
             required
-            onChange={(event) => {
-              setQuizType(event.target.value);
+            onChange={(e) => {
+              setQuizType(e.target.value);
             }}
           >
             <option value="multipleChoice">Multiple Choice</option>

@@ -1,7 +1,7 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const Dashboard = () => {
+const TeacherDashboard = () => {
   const options = {
     chart: {
       type: "line",
@@ -22,14 +22,14 @@ const Dashboard = () => {
       <div className="w-full  p-2 ">
         <div className="flex justify-center gap-5 items-center flex-wrap mb-5">
           {[
-            { id: 1, title: "No. Students",count:70 },
-            { id: 2, title: "No. Courses",count:12 },
-            { id: 3, title: "Created Quizzes",count:20 },
-            { id: 4, title: "Notifications",count:10 },
+            { id: 1, title: "No. Students", count: 70 },
+            { id: 2, title: "No. Courses", count: 12 },
+            { id: 3, title: "Created Quizzes", count: 20 },
+            { id: 4, title: "Notifications", count: 10 },
           ].map((item) => {
             return (
               <>
-                  <div
+                <div
                   key={item.id}
                   className=" flex font-medium flex-col items-center justify-center w-[150px] h-[150px] bg-white rounded-xl p-5 cursor-pointer shadow-slate-300 shadow-md hover:mt-[-5px] duration-300 flex-1"
                 >
@@ -64,4 +64,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default TeacherDashboard;

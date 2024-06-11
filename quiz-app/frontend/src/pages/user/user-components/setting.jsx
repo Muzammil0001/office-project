@@ -1,4 +1,4 @@
-const StudentProfileSetting = () => {
+const ProfileSetting = () => {
   return (
     <>
       <div>
@@ -8,4 +8,4 @@ const StudentProfileSetting = () => {
   );
 };
 
-export default StudentProfileSetting;
+export default ProfileSetting;

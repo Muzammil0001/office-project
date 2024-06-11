@@ -1,7 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 
-// Set storage
+///////////////// Set storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -11,15 +11,26 @@ const storage = multer.diskStorage({
   },
 });
 
-// Initialize upload variable with storage
+///////////////// Initialize upload variable with storage
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    // Accept image files only
-    if (!file.mimetype.startsWith("image/")) {
-      return cb(new Error("Only image files are allowed!"), false);
+    ///////////////// Accept specific file formats
+    const filetypes = /jpeg|jpg|png|gif|pdf|doc|docx|ppt|pptx|txt/;
+    const extname = filetypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(
+        new Error(
+          "File upload only supports the following filetypes - " + filetypes
+        )
+      );
     }
-    cb(null, true);
   },
 });
 

@@ -6,16 +6,23 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { getCoursesApi } from "../../../apis/course-apis";
+import { postStudyMaterial } from "../../../apis/study-material-api";
 
-import { postCourseApi } from "../../../../apis/course-apis";
+const AddStudyMaterial = ({ isOpenModal, setToClose }) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role;
+  const courseId = user?.courseId;
 
-const CreateCourse = ({ isOpenModal, setToClose }) => {
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [formData, setFormData] = useState({
-    courseName: "",
+    title: "",
     description: "",
-    courseImage: null,
+    courseId: "",
+    content: null,
   });
 
   const handleChange = (event) => {
@@ -26,22 +33,48 @@ const CreateCourse = ({ isOpenModal, setToClose }) => {
     }));
   };
 
+  const getCourseFunc = async () => {
+    const response = await getCoursesApi();
+    console.log("courses all", response);
+    if (role === "teacher") {
+      const TeacherCourses = response?.filter(
+        (course) => course._id === courseId
+      );
+      setCourses(TeacherCourses);
+      console.log("courses teacher", TeacherCourses);
+    } else if (role === "admin") {
+      setCourses(response);
+      console.log("courses all", response);
+    }
+  };
+
   const onSubmitHandle = async (event) => {
     event.preventDefault();
     const data = new FormData();
     for (const key in formData) {
       data.append(key, formData[key]);
     }
-
-    await postCourseApi(data);
-    setToClose(false);
-    alert("Course Created Successfully");
-    setFormData({
-      courseName: "",
-      description: "",
-      courseImage: null,
-    });
+    data.append("courseId", selectedCourse);
+    console.log("FormData:");
+    for (let pair of data.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
+    const resp = await postStudyMaterial(data);
+    if (resp.status === 201) {
+      alert("Study Material Uploaded");
+      setFormData({
+        title: "",
+        description: "",
+        courseId: "",
+        content: null,
+      });
+      setSelectedCourse("");
+    }
   };
+
+  useEffect(() => {
+    getCourseFunc();
+  }, []);
 
   return (
     <Transition appear show={isOpenModal} as={Fragment}>
@@ -64,7 +97,7 @@ const CreateCourse = ({ isOpenModal, setToClose }) => {
                   className="flex justify-between items-center "
                 >
                   <span className="text-lg text-center font-medium leading-6 text-gray-900">
-                    Create a New Course
+                    Add study material
                   </span>
                   <button
                     type="button"
@@ -77,48 +110,73 @@ const CreateCourse = ({ isOpenModal, setToClose }) => {
                 <form className="mt-2" onSubmit={onSubmitHandle}>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
-                      Course Name
+                      Title
                     </label>
                     <input
-                      type="text"
-                      name="courseName"
-                      className="dialog_input"
-                      placeholder="Enter course name"
                       required
-                      value={formData.courseName}
                       onChange={handleChange}
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      className="dialog_input"
+                      placeholder="Enter quiz name"
                     />
                   </div>
+
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
                       Description
                     </label>
-                    <input
-                      name="description"
-                      className="dialog_input"
+                    <textarea
                       required
-                      value={formData.description}
                       onChange={handleChange}
+                      type="text"
+                      name="description"
+                      value={formData.description}
+                      className="dialog_input"
+                      placeholder="Details..."
                     />
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">
-                      Course Image
+                      Select Course
                     </label>
+                    <select
+                      required
+                      onChange={(event) => {
+                        setFormData((preState) => ({
+                          ...preState,
+                          courseId: event.target.value,
+                        }));
+                      }}
+                      value={formData.courseId}
+                      name="courseId"
+                      className="dialog_input"
+                    >
+                      <option value=""> --Select Course-- </option>
+                      {courses?.map((course, idx) => (
+                        <option key={idx} value={course._id}>
+                          {course.courseName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mt-4">
                     <input
-                      type="file"
-                      name="courseImage"
-                      className="block w-full text-sm border border-gray-700 rounded-lg text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+                      required
                       onChange={handleChange}
-                      accept="image/*"
+                      type="file"
+                      name="content"
+                      className="block w-full text-sm border border-gray-700 rounded-lg text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
                     />
                   </div>
+
                   <div className="mt-6 flex items-center justify-end">
                     <Button
                       className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       type="submit"
                     >
-                      Create
+                      ADD
                     </Button>
                   </div>
                 </form>
@@ -130,4 +188,4 @@ const CreateCourse = ({ isOpenModal, setToClose }) => {
     </Transition>
   );
 };
-export default CreateCourse;
+export default AddStudyMaterial;

@@ -1,32 +1,35 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+
 import SignIn from "./pages/auth/signin";
 import SignUp from "./pages/auth/signup";
 import Home from "./pages";
+import QuizPage from "./pages/user/user-components/quiz";
+import UserChat from "./pages/user/user-components/chat";
+import QuizForm from "./pages//user/user-components/quiz-form";
+import UserNotifications from "./pages/user/user-components/notification";
 
 import AdminMain from "./pages/user/admin/";
-import QuizForm from "./components/quiz-form";
-import Dashboard from "./pages/user/admin/dashboard";
-import QuizzesList from "./pages/user/admin/quizzes";
-import Profile from "./pages/user/admin/setting";
-import Notify from "./pages/user/admin/notification";
-import Chat from "./pages/user/admin/announcement";
+import AdminDashboard from "./pages/user/admin/dashboard";
+import ProfileSetting from "./pages/user/user-components/setting";
+import Chat from "./pages/user/user-components/chat";
 import TeachersList from "./pages/user/admin/teachers";
 import CoursesList from "./pages/user/admin/courses";
 import ClassesList from "./pages/user/admin/classes";
 import StudentsList from "./pages/user/admin/students";
 
-import TeacherDashboard from "./pages/user/teacher";
-
 import StudentMain from "./pages/user/student/";
 import StudentDashboard from "./pages/user/student/dashboard";
-import Quizzes from "./pages/user/student/quizzes";
-import StudyMaterial from "./pages/user/student/study-material";
-import LeaderBoard from "./pages/user/student/leaderboard";
-import Courses from "./pages/user/student/courses";
-import StudentProfileSetting from "./pages/user/student/setting";
-import StudentNotify from "./pages/user/student/notification";
-import StudentChat from "./pages/user/student/chat";
-import Quiz from "./components/quiz";
+import StudentStudyMaterial from "./pages/user/student/study-material";
+import StudentLeaderBoard from "./pages/user/student/leaderboard";
+import StudentCourses from "./pages/user/student/courses";
+import StudentQuizzes from "./pages/user/student/quizzes";
+
+import TeacherMain from "./pages/user/teacher";
+import TeacherDashboard from "./pages/user/teacher/dashboard";
+import TeacherCourses from "./pages/user/teacher/courses";
+import ControlQuizzes from "./pages/user/user-components/quizzes";
+import TeacherLeaderBoard from "./pages/user/teacher/student-perfromance";
+import TeacherStudyMaterial from "./pages/user/teacher/study-material";
 
 const App = () => {
   const isAuthenticated = localStorage.getItem("token") !== null;
@@ -37,9 +40,10 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/quiz/:id" element={<Quiz />} />
+          <Route path="/quiz/:id" element={<QuizPage />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+
           <Route
             path="/create-quiz"
             element={
@@ -64,25 +68,34 @@ const App = () => {
             }
           >
             <Route path="dashboard" element={<StudentDashboard />} />
-            <Route path="quizzes" element={<Quizzes />} />
-            <Route path="study-material" element={<StudyMaterial />} />
-            <Route path="leaderboard" element={<LeaderBoard />} />
-            <Route path="profile" element={<StudentProfileSetting />} />
-            <Route path="courses" element={<Courses />} />
-            <Route path="notifications" element={<StudentNotify />} />
-            <Route path="chat" element={<StudentChat />} />
+            <Route path="quizzes" element={<StudentQuizzes />} />
+            <Route path="study-material" element={<StudentStudyMaterial />} />
+            <Route path="leaderboard" element={<StudentLeaderBoard />} />
+            <Route path="courses" element={<StudentCourses />} />
+            <Route path="profile" element={<ProfileSetting />} />
+            <Route path="notifications" element={<UserNotifications />} />
+            <Route path="chat" element={<UserChat />} />
           </Route>
 
           <Route
-            path="teacher/dashboard"
+            path="teacher"
             element={
               role === "teacher" && isAuthenticated ? (
-                <TeacherDashboard />
+                <TeacherMain />
               ) : (
                 <Navigate to="/signin" />
               )
             }
-          ></Route>
+          >
+            <Route path="dashboard" element={<TeacherDashboard />} />
+            <Route path="chat" element={<UserChat />} />
+            <Route path="courses" element={<TeacherCourses />} />
+            <Route path="quizzes" element={<ControlQuizzes />} />
+            <Route path="notifications" element={<UserNotifications />} />
+            <Route path="profile" element={<ProfileSetting />} />
+            <Route path="performance" element={<TeacherLeaderBoard />} />
+            <Route path="study-material" element={<TeacherStudyMaterial />} />
+          </Route>
 
           <Route
             path="/admin"
@@ -94,10 +107,10 @@ const App = () => {
               )
             }
           >
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="quizzes" element={<QuizzesList />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="notifications" element={<Notify />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="quizzes" element={<ControlQuizzes />} />
+            <Route path="profile" element={<ProfileSetting />} />
+            <Route path="notifications" element={<UserNotifications />} />
             <Route path="announcements" element={<Chat />} />
             <Route path="teachers" element={<TeachersList />} />
             <Route path="courses" element={<CoursesList />} />
