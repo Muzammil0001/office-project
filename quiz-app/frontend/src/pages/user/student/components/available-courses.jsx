@@ -37,19 +37,28 @@ const AvailableCourses = () => {
 
   const onClickHandle = async (courseId) => {
     const studentId = JSON.parse(localStorage.getItem("user"))._id;
-    const userResponse = await updateUserApi(studentId, courseId);
-    const enrolledResponse = await createEnrollment({ courseId, studentId });
-    console.log("enrolledResponse:", enrolledResponse);
-    console.log("userResponse:", userResponse);
+
+    const stdCoursesResp = await getEnrolledCourses(studentId);
+    const isPendingCourse = stdCoursesResp.data.some(
+      (course) => course.courseStatus === "pending"
+    );
+
+    if (isPendingCourse) {
+      alert("Please complete pending course before enrolling in a new course.");
+    } else {
+      const enrolledResponse = await createEnrollment({ courseId, studentId });
+
+      console.log("enrolledResponse:", enrolledResponse);
+    }
   };
   return (
     <>
       <div>
-        <h1 className="text-center text-lg sm:text-2xl w-full font-semibold font-nunito mt-3 mb-5 ">
+        <h1 className="text-center text-lg sm:text-2xl w-full font-semibold font-nunito my-10 mb-5 ">
           Available Courses
         </h1>
 
-        <div className="flex items-center justify-center gap-5 flex-wrap">
+        <div className="flex items-center justify-center md:justify-start gap-5 flex-wrap">
           {avaiableCourses ? (
             avaiableCourses.map((course, idx) => {
               const { _id, courseImage, courseName, description } = course;

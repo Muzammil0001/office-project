@@ -9,21 +9,19 @@ import {
 import { Fragment } from "react";
 import { deleteUserApi } from "../../../../apis/user-api";
 
-const DeleteStudent = ({ isOpenModal, setToClose ,studentId}) => {
-
+const DeleteStudent = ({ isOpenModal, setToClose, studentId }) => {
   const confirmationHandle = async () => {
     try {
       if (studentId) {
         const DeletedStudent = await deleteUserApi(studentId);
         console.log(" DeletedStudent:", DeletedStudent);
-        
+
         setToClose(false);
       }
     } catch (error) {
       console.error("Error fetching Student:", error);
     }
   };
-
 
   return (
     <Transition appear show={isOpenModal} as={Fragment}>
@@ -52,7 +50,7 @@ const DeleteStudent = ({ isOpenModal, setToClose ,studentId}) => {
 
                 <div className="mt-6 flex items-center gap-2 justify-center">
                   <Button
-                    className="w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    className="w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                     type="button"
                     onClick={() => setToClose(false)}
                   >

@@ -7,7 +7,7 @@ import {
   postAnnouncement,
 } from "../../../apis/announcement-api";
 
-const Chat = () => {
+const AdminAnnouncement = () => {
   const [announcement, setAnnouncements] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -35,8 +35,8 @@ const Chat = () => {
           targetUser: role,
         };
         const response = await postAnnouncement(announcement);
-        setTitle("")
-        setDescription("")
+        setTitle("");
+        setDescription("");
         console.log("Announcement response:", response);
       } else {
         const getUsers = await getUserByIRole(role);
@@ -48,8 +48,8 @@ const Chat = () => {
           targetUser: role,
         };
         await postAnnouncement(announcement);
-        setTitle("")
-        setDescription("")
+        setTitle("");
+        setDescription("");
       }
     } catch (error) {
       console.error("Failed to create announcement", error);
@@ -64,7 +64,6 @@ const Chat = () => {
     const getAnnouncementsFunc = async () => {
       const response = await getAnnouncements();
       setAnnouncements(response.data);
-      
     };
     getAnnouncementsFunc();
   }, []);
@@ -136,34 +135,37 @@ const Chat = () => {
             className="h-80 overflow-y-auto mb-4 p-3 bg-gray-50 rounded"
             style={{ position: "relative" }}
           >
-            {
-              announcement.map((msg) =>{return (
-              <div key={msg._id} className="bg-white p-3 rounded mb-2 shadow">
-                <div className="flex justify-end items-center gap-2">
-                  <RxCross2
-                    onClick={() => {
-                      deleteAnnouncementHandle(msg._id);
-                    }}
-                    className="text-red-600 size-4 sm:size-5"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="text-xs text-gray-600">
-                    Time:
-                    {new Date(msg.createdAt).toLocaleTimeString("en-US", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
+            {announcement.map((msg) => {
+              return (
+                <div key={msg._id} className="bg-white p-3 rounded mb-2 shadow">
+                  <div className="flex justify-end items-center gap-2">
+                    <RxCross2
+                      onClick={() => {
+                        deleteAnnouncementHandle(msg._id);
+                      }}
+                      className="text-red-600 size-4 sm:size-5"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-gray-600">
+                      Time:
+                      {new Date(msg.createdAt).toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
 
-                  <p className="text-xs text-blue-500">To: {msg.targetUser}</p>
+                    <p className="text-xs text-blue-500">
+                      To: {msg.targetUser}
+                    </p>
+                  </div>
+                  <p className="font-semibold text-wrap">{msg.title}</p>
+                  <p className="italic text-wrap text-gray-600 font-normal text-sm">
+                    {msg.description}
+                  </p>
                 </div>
-                <p className="font-semibold text-wrap">{msg.title}</p>
-                <p className="italic text-wrap text-gray-600 font-normal text-sm">
-                  {msg.description}
-                </p>
-              </div>
-            )})}
+              );
+            })}
             <div ref={chatEndRef} />
           </div>
         </div>
@@ -172,4 +174,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default AdminAnnouncement;

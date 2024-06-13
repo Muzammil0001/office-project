@@ -38,19 +38,19 @@ const StudentQuizzes = () => {
           quizzes?.map((quiz) => (
             <div
               key={quiz._id}
-              className="w-full bg-white border border-gray-300 flex md:flex-row h-full flex-col items-center p-3 gap-5 mb-4"
+              className="w-full bg-white border border-gray-300 flex  md:flex-row h-full flex-col items-center p-3 gap-0 mb-4 flex-1"
             >
-              <div className="w-full max-w-40 text-center p-2 font-bold text-nowrap">
+              <div className="w-full mb-3 md:mb-0 max-w-40 text-center p-2 font-bold text-nowrap">
                 {quiz.quizTitle}
               </div>
               <div className="w-full flex sm:flex-row flex-col gap-5 sm:gap-[100px] p-2 justify-center md:justify-end items-center">
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2  flex-wrap">
                   <div className="font-medium text-nowrap">Due Date:</div>
                   <div className="text-base">
                     {new Date(quiz.dueDate).toLocaleDateString()}
                   </div>
                 </div>
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2  flex-wrap">
                   <div className="font-medium">Duration:</div>
                   <div className="text-base text-nowrap">
                     {quiz.timeLimit} minutes

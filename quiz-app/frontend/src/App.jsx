@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignIn from "./pages/auth/signin";
 import SignUp from "./pages/auth/signup";
 import Home from "./pages";
-import QuizPage from "./pages/user/user-components/quiz";
+import QuizPage from "./pages/user/student/quiz";
 import UserChat from "./pages/user/user-components/chat";
 import QuizForm from "./pages/user/user-components/quiz-form";
 import UserNotifications from "./pages/user/user-components/notification";
@@ -27,7 +27,7 @@ import ControlQuizzes from "./pages/user/user-components/quizzes";
 import TeacherLeaderBoard from "./pages/user/teacher/student-perfromance";
 import TeacherStudyMaterial from "./pages/user/teacher/study-material";
 import ProtectedRoute from "./config/routes-config/protected-routes";
-
+import AdminAnnouncement from "./pages/user/admin/announcement";
 const App = () => {
   return (
     <BrowserRouter>
@@ -73,7 +73,7 @@ const App = () => {
             <Route path="quizzes" element={<ControlQuizzes />} />
             <Route path="profile" element={<ProfileSetting />} />
             <Route path="notifications" element={<UserNotifications />} />
-            <Route path="announcements" element={<Chat />} />
+            <Route path="announcements" element={<AdminAnnouncement />} />
             <Route path="teachers" element={<TeachersList />} />
             <Route path="courses" element={<CoursesList />} />
             <Route path="classes" element={<ClassesList />} />

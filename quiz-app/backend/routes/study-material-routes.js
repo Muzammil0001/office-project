@@ -7,7 +7,7 @@ const {
   getStudyMaterialById,
   updateStudyMaterial,
   deleteStudyMaterial,
-} = require("../controllers/studyMaterialController");
+} = require("../controllers/study-material-controller");
 
 router.post("/study-material", upload.single("content"), createStudyMaterial);
 

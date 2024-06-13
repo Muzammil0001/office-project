@@ -12,7 +12,7 @@ const TeacherDashboard = () => {
     series: [
       {
         name: "Score",
-        data: [1, 1, 3, 4, 4, 8, 2, 4],
+        data: [2, 10, 3, 4, 4, 8, 2, 4],
       },
     ],
   };

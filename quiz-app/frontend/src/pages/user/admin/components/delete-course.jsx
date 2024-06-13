@@ -48,7 +48,7 @@ const DeleteCourses = ({ isOpenModal, setToClose, courseId }) => {
 
                 <div className="mt-6 flex items-center gap-2 justify-center">
                   <Button
-                    className="w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    className="w-full inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     type="button"
                     onClick={() => setToClose(false)}
                   >
