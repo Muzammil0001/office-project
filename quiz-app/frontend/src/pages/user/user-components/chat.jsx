@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getChats, postChat } from "../../../apis/discussion-api";
+import { getAllEnrollments } from "../../../apis/enrolled-courses";
+import { getUserByIRole } from "../../../apis/user-api";
 
 const UserChat = () => {
-  const sender = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
+  const senderId = user?._id;
+  const senderRole = user?.role;
+  const senderCourses = user?.courseId;
+  console.log("SenderId", senderId);
+  console.log("SenderRole", senderRole);
+
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [receiverId, setReceiverId] = useState([]);
 
   const chatEndRef = useRef(null);
 
@@ -18,13 +27,14 @@ const UserChat = () => {
       try {
         const data = {
           message: message,
-          senderId: sender._id,
+          senderId,
+          receiverId,
         };
 
         console.log("Chat created", data);
         await postChat(data);
         setMessage("");
-        fetchChats();
+        CallApis();
       } catch (error) {
         console.log("Failed to create Chat", error);
       }
@@ -35,29 +45,92 @@ const UserChat = () => {
     try {
       const data = {
         message: message,
-        senderId: sender._id,
+        senderId,
+        receiverId,
       };
 
       console.log("Chat created", data);
       await postChat(data);
       setMessage("");
-      fetchChats();
+      CallApis();
     } catch (error) {
       console.log("Failed to create Chat", error);
     }
   };
 
-  const fetchChats = async () => {
+  const CallApis = async () => {
     try {
-      const res = await getChats();
-      setChatHistory(res?.data);
+      const enrolledResp = await getAllEnrollments();
+      const teachersResp = await getUserByIRole("teacher");
+
+      if (senderRole == "teacher") {
+        const teachers = teachersResp?.filter((teacher) =>
+          teacher.courseId.some((course) => senderCourses.includes(course._id))
+        );
+        const teacherIds = teachers?.map((teacher) => teacher._id);
+        console.log("teacherIds", teacherIds);
+        const classFellows = enrolledResp?.data.filter(
+          (std) => senderCourses.includes(std.courseId._id) || []
+        );
+        const classFellowsIds =
+          classFellows.map((stdId) => stdId.studentId._id) || [];
+
+        const receiverId = [...teacherIds, ...classFellowsIds];
+        setReceiverId(receiverId);
+      }
+      if (senderRole === "student") {
+        console.log(" enrolledResp:", enrolledResp.data);
+        const StdCourses = enrolledResp?.data.filter(
+          (enrollment) => enrollment.studentId._id == senderId
+        );
+        console.log("StdCourses", StdCourses);
+
+        const studentCourseIds = StdCourses.map(
+          (enrollment) => enrollment.courseId._id
+        );
+        console.log("Student Course IDs", studentCourseIds);
+
+        const classFellows = enrolledResp?.data.filter((enrollment) =>
+          studentCourseIds.includes(enrollment.courseId._id)
+        );
+        const classFellowsIds = classFellows.map(
+          (enrollment) => enrollment.studentId._id
+        );
+        console.log("Class Fellows IDs", classFellowsIds);
+
+        const teachers = teachersResp?.filter((teacher) =>
+          teacher.courseId.some((course) =>
+            studentCourseIds.includes(course._id)
+          )
+        );
+        const teacherIds = teachers.map((teacher) => teacher._id);
+        console.log("Teacher IDs", teacherIds);
+        const receiverIds = [...teacherIds, ...classFellowsIds];
+        setReceiverId(receiverIds);
+      }
+
+      const chatResp = await getChats();
+      // console.log("chatResp", chatResp);
+      if (chatResp.status === 200) {
+        const filteredChats = chatResp.data.filter(
+          (chat) =>
+            chat.senderId._id === senderId ||
+            chat.receiverId.some((id) => id._id === senderId)
+        );
+
+        if (filteredChats.length > 0) {
+          setChatHistory(filteredChats);
+        } else {
+          setChatHistory([]);
+        }
+      }
     } catch (error) {
       console.log("Failed to fetch chats", error);
     }
   };
 
   useEffect(() => {
-    fetchChats();
+    CallApis();
   }, []);
 
   useEffect(() => {

@@ -1,14 +1,12 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignIn from "./pages/auth/signin";
 import SignUp from "./pages/auth/signup";
 import Home from "./pages";
 import QuizPage from "./pages/user/user-components/quiz";
 import UserChat from "./pages/user/user-components/chat";
-import QuizForm from "./pages//user/user-components/quiz-form";
+import QuizForm from "./pages/user/user-components/quiz-form";
 import UserNotifications from "./pages/user/user-components/notification";
-
-import AdminMain from "./pages/user/admin/";
+import AdminMain from "./pages/user/admin";
 import AdminDashboard from "./pages/user/admin/dashboard";
 import ProfileSetting from "./pages/user/user-components/setting";
 import Chat from "./pages/user/user-components/chat";
@@ -16,57 +14,35 @@ import TeachersList from "./pages/user/admin/teachers";
 import CoursesList from "./pages/user/admin/courses";
 import ClassesList from "./pages/user/admin/classes";
 import StudentsList from "./pages/user/admin/students";
-
-import StudentMain from "./pages/user/student/";
+import StudentMain from "./pages/user/student";
 import StudentDashboard from "./pages/user/student/dashboard";
 import StudentStudyMaterial from "./pages/user/student/study-material";
 import StudentLeaderBoard from "./pages/user/student/leaderboard";
 import StudentCourses from "./pages/user/student/courses";
 import StudentQuizzes from "./pages/user/student/quizzes";
-
 import TeacherMain from "./pages/user/teacher";
 import TeacherDashboard from "./pages/user/teacher/dashboard";
 import TeacherCourses from "./pages/user/teacher/courses";
 import ControlQuizzes from "./pages/user/user-components/quizzes";
 import TeacherLeaderBoard from "./pages/user/teacher/student-perfromance";
 import TeacherStudyMaterial from "./pages/user/teacher/study-material";
+import ProtectedRoute from "./config/routes-config/protected-routes";
 
 const App = () => {
-  const isAuthenticated = localStorage.getItem("token") !== null;
-  const role = JSON.parse(localStorage.getItem("user"))?.role;
-
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/quiz/:id" element={<QuizPage />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/quiz/:id" element={<QuizPage />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
 
-          <Route
-            path="/create-quiz"
-            element={
-              role === "teacher" || (role === "admin" && isAuthenticated) ? (
-                <QuizForm />
-              ) : (
-                <h1 className="text-center text-xl text-red-600 mt-5">
-                  401 Unauthorized Access.
-                </h1>
-              )
-            }
-          />
+        <Route element={<ProtectedRoute allowedRoles={["teacher", "admin"]} />}>
+          <Route path="/create-quiz" element={<QuizForm />} />
+        </Route>
 
-          <Route
-            path="students"
-            element={
-              role === "student" && isAuthenticated ? (
-                <StudentMain />
-              ) : (
-                <Navigate to="/signin" />
-              )
-            }
-          >
+        <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
+          <Route path="/students" element={<StudentMain />}>
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="quizzes" element={<StudentQuizzes />} />
             <Route path="study-material" element={<StudentStudyMaterial />} />
@@ -76,17 +52,10 @@ const App = () => {
             <Route path="notifications" element={<UserNotifications />} />
             <Route path="chat" element={<UserChat />} />
           </Route>
+        </Route>
 
-          <Route
-            path="teacher"
-            element={
-              role === "teacher" && isAuthenticated ? (
-                <TeacherMain />
-              ) : (
-                <Navigate to="/signin" />
-              )
-            }
-          >
+        <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
+          <Route path="/teacher" element={<TeacherMain />}>
             <Route path="dashboard" element={<TeacherDashboard />} />
             <Route path="chat" element={<UserChat />} />
             <Route path="courses" element={<TeacherCourses />} />
@@ -96,17 +65,10 @@ const App = () => {
             <Route path="performance" element={<TeacherLeaderBoard />} />
             <Route path="study-material" element={<TeacherStudyMaterial />} />
           </Route>
+        </Route>
 
-          <Route
-            path="/admin"
-            element={
-              role === "admin" && isAuthenticated ? (
-                <AdminMain />
-              ) : (
-                <Navigate to="/signin" />
-              )
-            }
-          >
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<AdminMain />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="quizzes" element={<ControlQuizzes />} />
             <Route path="profile" element={<ProfileSetting />} />
@@ -117,18 +79,18 @@ const App = () => {
             <Route path="classes" element={<ClassesList />} />
             <Route path="students" element={<StudentsList />} />
           </Route>
+        </Route>
 
-          <Route
-            path="*"
-            element={
-              <h1 className="text-center text-xl text-red-600 mt-5">
-                404 Page Not Found.
-              </h1>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </>
+        <Route
+          path="*"
+          element={
+            <h1 className="text-center text-xl text-red-600 mt-5">
+              404 Page Not Found.
+            </h1>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

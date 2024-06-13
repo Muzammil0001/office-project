@@ -11,7 +11,7 @@ import { postQuiz } from "../../../apis//quizzes-apis";
 const QuizForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const role = user?.role;
-  const courseId = user?.courseId;
+  const teacherCourseIds = user?.courseId;
 
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -193,11 +193,11 @@ const QuizForm = () => {
 
     console.log("courses all", response);
     if (role === "teacher") {
-      const TeacherCourses = response?.filter(
-        (course) => course._id === courseId
+      const teacherCourses = response.filter((course) =>
+        teacherCourseIds.includes(course._id)
       );
-      setCourses(TeacherCourses);
-      console.log("courses teacher", TeacherCourses);
+      setCourses(teacherCourses);
+      console.log("courses teacher", teacherCourses);
     } else if (role === "admin") {
       setCourses(response);
       console.log("courses all", response);

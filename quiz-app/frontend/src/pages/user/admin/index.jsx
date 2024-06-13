@@ -59,7 +59,7 @@ const AdminDashboard = () => {
     },
   ];
 
-  const onClickHandle = () => {
+  const onClickLogoutHandle = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     navigation("/signin");
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
             </button>
           </div>
           <button
-            onClick={onClickHandle}
+            onClick={onClickLogoutHandle}
             className="cursor-pointer text-black font-normal py-2 px-4 rounded"
           >
             Logout

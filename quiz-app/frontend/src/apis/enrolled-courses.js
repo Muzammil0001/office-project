@@ -23,6 +23,18 @@ export const getStudentsByCourse = async (courseId) => {
   }
 };
 
+export const getAllEnrollments = async () => {
+  try {
+    const response = await axios.get(`${REACT_API_URL}/enrollments/`);
+    if (response.status == 200) {
+      // console.log("Enrollments Fetched:", response.data);
+      return response;
+    }
+  } catch (error) {
+    console.error("Error in fetching enrollments:", error);
+  }
+};
+///////get enrolled courses based on std Id
 export const getEnrolledCourses = async (StdId) => {
   try {
     const response = await axios.get(

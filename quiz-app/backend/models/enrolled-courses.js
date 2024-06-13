@@ -8,10 +8,12 @@ const enrolledCoursesSchema = new Schema(
     studentId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     courseId: {
       type: Schema.Types.ObjectId,
       ref: "Course",
+      required: true,
     },
     courseStatus: {
       type: String,
