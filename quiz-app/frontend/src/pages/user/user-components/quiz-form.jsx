@@ -7,12 +7,13 @@ import MultiSelectInput from "./multiselect";
 import quizSchema from "../../../config/auth-schema/quiz-form-schema";
 import { getStudentsByCourse } from "../../../apis/enrolled-courses";
 import { postQuiz } from "../../../apis//quizzes-apis";
+import { useNavigate } from "react-router-dom";
 
 const QuizForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const role = user?.role;
-  const courseId = user?.courseId;
-
+  const teacherCourseIds = user?.courseId;
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -183,6 +184,7 @@ const QuizForm = () => {
       }
       await postQuiz(data);
       reset();
+      navigate(-1);
     } catch (error) {
       console.error("Failed to create Quiz:", error);
     }
@@ -193,11 +195,11 @@ const QuizForm = () => {
 
     console.log("courses all", response);
     if (role === "teacher") {
-      const TeacherCourses = response?.filter(
-        (course) => course._id === courseId
+      const teacherCourses = response.filter((course) =>
+        teacherCourseIds.includes(course._id)
       );
-      setCourses(TeacherCourses);
-      console.log("courses teacher", TeacherCourses);
+      setCourses(teacherCourses);
+      console.log("courses teacher", teacherCourses);
     } else if (role === "admin") {
       setCourses(response);
       console.log("courses all", response);

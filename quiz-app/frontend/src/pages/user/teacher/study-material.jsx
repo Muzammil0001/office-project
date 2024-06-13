@@ -1,9 +1,34 @@
-import { courseImage5 } from "../../../config/constants/images";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddStudyMaterial from "../user-components/add-study-material";
-
+import {
+  deleteStudyMaterial,
+  getStudyMaterial,
+} from "../../../apis/study-material-api";
+import { FiDownload } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
+import { FaEye, FaEdit } from "react-icons/fa";
 const TeacherStudyMaterial = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [studyMaterials, setStudyMaterials] = useState([]);
+
+  useEffect(() => {
+    const fetchStudyMaterials = async () => {
+      const resp = await getStudyMaterial();
+      setStudyMaterials(resp.data);
+      console.log("resp SM", resp.data);
+    };
+    fetchStudyMaterials();
+  }, []);
+
+  const onClickDeleteHandle = async (id) => {
+    if (id) {
+      const isConfirmed = confirm("Confirm to delete this study material?");
+      if (isConfirmed) {
+        const resp = await deleteStudyMaterial(id);
+        console.log(resp);
+      }
+    }
+  };
   return (
     <>
       <div className="w-full">
@@ -21,38 +46,60 @@ const TeacherStudyMaterial = () => {
             Add Material
           </button>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-5 mt-10">
-          {[
-            { id: 1, title: "Book Material" },
-            { id: 2, title: "Video Lectures" },
-            { id: 3, title: "Past Paper" },
-          ].map((items) => {
-            return (
-              <div
-                key={items.id}
-                className="hover:mt-[-5px] duration-300 cursor-pointer w-[300px] h-[400px] shadow-md shadow-gray-300 bg-white rounded-[20px]"
-              >
-                <div>
-                  <img
-                    className="h-[200px] w-[300px] object-fit rounded-tl-[20px] rounded-tr-[20px]"
-                    src={courseImage5}
-                    alt={courseImage5}
-                  />
-                </div>
-                <div className="px-5 py-3">
-                  <h3 className="heading3">{items.title}</h3>
-                  <p className="text-center py-2">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Nulla vitae aliquid dignissimos.
-                  </p>
-                  <div className="flex justify-center">
-                    {" "}
-                    <button className="btn">Read more</button>
-                  </div>
-                </div>
+        <div className="w-full mt-10">
+          <div className="flex flex-col items-center">
+            <div className="w-full max-w-5xl">
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border">
+                  <thead>
+                    <tr className="w-full bg-blue-900 text-white uppercase text-sm leading-normal">
+                      <th className="py-3 px-6 text-center">Title</th>
+                      <th className="py-3 px-6 text-center hidden sm:table-cell">
+                        Description
+                      </th>
+                      <th className="py-3 px-6 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 text-sm font-light">
+                    {studyMaterials.map((material) => {
+                      const fileName = material.content.split("/").pop();
+                      return (
+                        <tr
+                          key={material._id}
+                          className="border-b border-gray-200 hover:bg-gray-100"
+                        >
+                          <td className="py-3 px-6 text-center whitespace-nowrap ">
+                            <span className="font-medium">
+                              {material.title}
+                            </span>
+                          </td>
+                          <td className="py-3 px-6 text-center max-w-40 hidden sm:table-cell">
+                            <span className="line-clamp-1">
+                              {material.description}
+                            </span>
+                          </td>
+                          <td className="py-3 px-6 flex justify-center items-center gap-3">
+                            <FaEye className="text-gray-600 hover:text-blue-700 text-lg" />
+
+                            <FaEdit className="text-gray-600 hover:text-green-700 text-lg" />
+                            <MdDelete
+                              onClick={() => {
+                                onClickDeleteHandle(material._id);
+                              }}
+                              className="text-gray-600 hover:text-red-700 text-lg"
+                            />
+                            <a href={material.content} download={fileName}>
+                              <FiDownload className="text-gray-600 hover:text-blue-700 text-lg" />
+                            </a>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-            );
-          })}
+            </div>
+          </div>
         </div>
       </div>
     </>

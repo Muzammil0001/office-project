@@ -1,5 +1,5 @@
 import axios from "axios";
-import { REACT_API_URL } from "../../config";
+import { REACT_API_URL } from "../../configFile";
 
 export const postAnnouncement = async (data) => {
   try {

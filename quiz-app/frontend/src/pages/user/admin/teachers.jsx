@@ -102,7 +102,7 @@ const TeachersList = () => {
                         {email}
                       </td>
                       <td className="p-2 border border-gray-300">
-                        {courseId?.courseName || "N/A"}
+                        {courseId[0].courseName || "N/A"}
                       </td>
                       <td className="p-2 border border-gray-300 ">
                         <div className="flex gap-5 p-2 justify-center">

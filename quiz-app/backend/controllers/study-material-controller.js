@@ -2,7 +2,7 @@ const StudyMaterial = require("../models/study-material-model");
 
 exports.createStudyMaterial = async (req, res) => {
   try {
-    const { courseId, title, description, content } = req.body;
+    const { courseId, title, description } = req.body;
 
     if (!req.file) {
       return res.status(400).send({ message: "study meterial is required" });

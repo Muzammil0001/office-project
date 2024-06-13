@@ -9,7 +9,7 @@ import {
 import { Fragment, useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { getCoursesApi } from "../../../apis/course-apis";
-import { postStudyMaterial } from "../../../apis/study-material-api";
+import { addStudyMaterial } from "../../../apis/study-material-api";
 
 const AddStudyMaterial = ({ isOpenModal, setToClose }) => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -37,8 +37,8 @@ const AddStudyMaterial = ({ isOpenModal, setToClose }) => {
     const response = await getCoursesApi();
     console.log("courses all", response);
     if (role === "teacher") {
-      const TeacherCourses = response?.filter(
-        (course) => course._id === courseId
+      const TeacherCourses = response?.filter((course) =>
+        courseId.includes(course._id)
       );
       setCourses(TeacherCourses);
       console.log("courses teacher", TeacherCourses);
@@ -49,18 +49,19 @@ const AddStudyMaterial = ({ isOpenModal, setToClose }) => {
   };
 
   const onSubmitHandle = async (event) => {
+    console.log("selectedCourse", selectedCourse);
     event.preventDefault();
     const data = new FormData();
     for (const key in formData) {
       data.append(key, formData[key]);
     }
-    data.append("courseId", selectedCourse);
+    data.append("courseId>>>>>>>>>>>", selectedCourse);
     console.log("FormData:");
     for (let pair of data.entries()) {
       console.log(pair[0] + ": " + pair[1]);
     }
-    const resp = await postStudyMaterial(data);
-    if (resp.status === 201) {
+    const resp = await addStudyMaterial(data);
+    if (resp) {
       alert("Study Material Uploaded");
       setFormData({
         title: "",
@@ -69,6 +70,7 @@ const AddStudyMaterial = ({ isOpenModal, setToClose }) => {
         content: null,
       });
       setSelectedCourse("");
+      setToClose(false);
     }
   };
 

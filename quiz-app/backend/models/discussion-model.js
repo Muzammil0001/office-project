@@ -13,10 +13,18 @@ const discussionSchema = new Schema(
       ref: "User",
       required: true,
     },
-    receiverId: {
+    senderId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
+    receiverId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );

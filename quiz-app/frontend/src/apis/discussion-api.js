@@ -1,5 +1,5 @@
 import axios from "axios";
-import { REACT_API_URL } from "../../config";
+import { REACT_API_URL } from "../../configFile";
 
 export const postChat = async (data) => {
   try {
@@ -17,7 +17,7 @@ export const getChats = async () => {
   try {
     const response = await axios.get(`${REACT_API_URL}/discussion/`);
     if (response.status == 200) {
-      console.log("Response:", response.data);
+      // console.log("Response:", response.data);
       return response;
     }
   } catch (error) {

@@ -16,7 +16,7 @@ const AdminDashboard = () => {
     series: [
       {
         name: "Score",
-        data: [1, 1, 3, 4, 4, 8, 2, 4],
+        data: [10, 1, 3, 4, 4, 8, 2, 4],
       },
     ],
   };

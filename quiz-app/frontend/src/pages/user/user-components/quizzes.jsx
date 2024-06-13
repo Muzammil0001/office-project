@@ -3,7 +3,11 @@ import { getQuizzes, updateQuiz } from "../../../apis/quizzes-apis";
 import { useState, useEffect } from "react";
 
 const Quizzes = () => {
-  const { _id, role, courseId } = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role;
+  const teacherCourseIds = user?.courseId;
+  const _id = user?.user?._id;
+
   const [quizzes, setQuizzes] = useState(null);
 
   const GetQuizzesFunc = async () => {
@@ -11,9 +15,10 @@ const Quizzes = () => {
       const resp = await getQuizzes();
 
       if (role === "teacher") {
-        const TeacherQuizzes = resp.data.filter(
-          (quiz) => quiz.courseId._id === courseId
+        const TeacherQuizzes = resp.data.filter((quiz) =>
+          teacherCourseIds.includes(quiz.courseId._id)
         );
+
         setQuizzes(TeacherQuizzes);
         console.log("TeacherQuizzes", TeacherQuizzes);
       } else if (role === "admin") {
@@ -52,7 +57,7 @@ const Quizzes = () => {
 
         <div className="flex flex-col items-center px-4 py-10">
           <h2 className="text-center text-3xl font-bold font-nunito mb-10">
-            Quizzes Report
+            Quizzes History
           </h2>
           <div className="w-full overflow-auto">
             <table className="min-w-[500px] w-full">

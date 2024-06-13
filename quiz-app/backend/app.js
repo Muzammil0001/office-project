@@ -11,6 +11,7 @@ const assignedCourseRoutes = require("./routes/assigned-course-routes.js");
 const notificationRoutes = require("./routes/notification-routes.js");
 const enrolledcourseRoutes = require("./routes/enrolled-courses-routes.js");
 const signinRoutes = require("./routes/signin-routes");
+const studyMaterialRoutes = require("./routes/study-material-routes.js");
 
 const cors = require("cors"); //For Cross Origin Resource Sharing
 const path = require("path");
@@ -36,6 +37,7 @@ app.use(courseRoutes);
 app.use(assignedCourseRoutes);
 app.use(notificationRoutes);
 app.use(enrolledcourseRoutes);
+app.use(studyMaterialRoutes);
 
 const startServer = async () => {
   await dbConfig();

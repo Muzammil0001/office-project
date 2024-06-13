@@ -18,27 +18,35 @@ const SignIn = () => {
   const onSubmit = async (data) => {
     try {
       const response = await signinUser(data);
-      console.log("Response from sign in:", response); // Log the response
-      if (response.status === 201) {
+      console.log("Response from sign in:", response);
+
+      if (response && response.status === 201) {
         localStorage.setItem("token", JSON.stringify(response.data.token));
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        switch (response.data.user.role) {
+        const UserRole = response.data.user.role;
+
+        switch (UserRole) {
           case "admin":
+            alert("Admin login successfully");
             navigate("/admin/dashboard");
             break;
           case "student":
+            alert("Student login successfully");
             navigate("/students/dashboard");
             break;
           case "teacher":
+            alert("Teacher login successfully");
             navigate("/teacher/dashboard");
             break;
           default:
             throw new Error("Unauthorized role");
         }
+      } else {
+        console.error("Unexpected response status:", response.status);
       }
     } catch (error) {
-      console.log("Failed to login", error);
+      console.error("Failed to login", error);
     }
   };
 

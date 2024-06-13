@@ -5,11 +5,13 @@ const User = require("./user-model");
 
 const assignedCoursesSchema = new Schema(
   {
-    courseId: {
-      type: Schema.Types.ObjectId,
-      ref: "Course",
-      required: true,
-    },
+    courseId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+      },
+    ],
     teacherId: {
       type: Schema.Types.ObjectId,
       ref: "User",
